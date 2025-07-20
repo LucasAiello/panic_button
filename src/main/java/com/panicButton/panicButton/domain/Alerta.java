@@ -1,5 +1,6 @@
-package com.panicButton.panicButton.models;
+package com.panicButton.panicButton.domain;
 
+import com.panicButton.panicButton.observer.iObserver;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
@@ -9,6 +10,10 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Alerta
 {
     @Id
@@ -19,4 +24,9 @@ public class Alerta
     private Usuario usuario;
     private List<iObserver> observers;
 
+    public void notificarObservadores() {
+        for (Observer obs : observadores) {
+            obs.atualizar(this);
+        }
+    }
 }

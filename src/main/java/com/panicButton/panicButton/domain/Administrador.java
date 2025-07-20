@@ -1,8 +1,12 @@
-package com.panicButton.panicButton.models;
+package com.panicButton.panicButton.domain;
 
 import jakarta.persistence.Entity;
 
 @Entity
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Administrador extends Usuario
 {
     private String chave_acesso;

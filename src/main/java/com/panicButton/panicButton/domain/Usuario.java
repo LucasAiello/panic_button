@@ -1,9 +1,14 @@
-package com.panicButton.panicButton.models;
+package com.panicButton.panicButton.domain;
+import com.panicButton.panicButton.state.iEstado;
 import jakarta.persistence.*;
 
 import java.util.UUID;
 
 @Entity
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Usuario
 {
     @Id
