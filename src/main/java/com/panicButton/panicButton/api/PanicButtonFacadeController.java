@@ -32,7 +32,7 @@ public class PanicButtonFacadeController {
 			return new ResponseEntity<>("Erro interno ao criar usuário.", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	@GetMapping("/get-usuarios")
+	@GetMapping("/get-usuario")
 	public ResponseEntity<?> get(@RequestParam String matricula) {
 		try {
 			Optional<Usuario> novoUsuario = service.getUsuario(matricula);
@@ -50,7 +50,7 @@ public class PanicButtonFacadeController {
 		}
 	}
 
-	@PutMapping("/update-usuarios")
+	@PutMapping("/update-usuario")
 	public ResponseEntity<?> update(@RequestParam String matricula, @RequestBody Usuario usuario) {
 		try {
 			Usuario novoUsuario = service.updateUsuario(matricula, usuario);
@@ -63,5 +63,22 @@ public class PanicButtonFacadeController {
 					.body("Erro interno ao atualizar usuário.");
 		}
 	}
-
+	@DeleteMapping("/delete-usuario")
+	public ResponseEntity<?> delete(@RequestParam String matricula) {
+		try {
+			Optional<Usuario> usuario = service.getUsuario(matricula);
+			if (usuario.isPresent()) {
+				service.removeUsuario(usuario.get());
+				return new ResponseEntity<>(HttpStatus.OK);
+			} else {
+				return ResponseEntity.badRequest().body("Parâmetros inválidos");
+			}
+		} catch (IllegalArgumentException ex) {
+			return ResponseEntity.badRequest().body("Parâmetros inválidos: " + ex.getMessage());
+		} catch (Exception e) {
+			LOG.error("[GET] /delete-usuario - Erro: ", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Erro interno ao deletar usuário.");
+		}
+	}
 }
