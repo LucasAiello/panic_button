@@ -5,16 +5,23 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Getter
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Administrador extends Usuario
 {
     private String chave_acesso;
 
-    public Usuario cadastrarUsuario(String matricula, String nome);
-    public boolean bloquearUsuario(String matricula);
+    public Usuario cadastrarUsuario(String matricula, String nome)
+    {
+        return new Usuario();
+    };
+    public boolean bloquearUsuario(String matricula)
+    {
+        return true;
+    };
 }

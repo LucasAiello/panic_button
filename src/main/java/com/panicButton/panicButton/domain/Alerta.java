@@ -1,10 +1,7 @@
 package com.panicButton.panicButton.domain;
 
 import com.panicButton.panicButton.observer.iObserver;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,7 +22,9 @@ public class Alerta
     private UUID id;
     private String posicao;
     private String motivo;
+    @ManyToOne
     private Usuario usuario;
+    @Transient
     private List<iObserver> observadores;
 
     public void notificarObservadores() {
