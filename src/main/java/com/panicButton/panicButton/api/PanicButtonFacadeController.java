@@ -1,6 +1,7 @@
 package com.panicButton.panicButton.api;
 
 import com.panicButton.panicButton.domain.Usuario;
+import com.panicButton.panicButton.domain.Alerta;
 import com.panicButton.panicButton.service.Sistema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,4 +82,71 @@ public class PanicButtonFacadeController {
 					.body("Erro interno ao deletar usuário.");
 		}
 	}
+
+	@PostMapping("/create-alerta")
+	public ResponseEntity<?> add(@RequestBody Alerta alerta) {
+		try {
+			Alerta novoAlerta = service.createAlerta(alerta);
+			return new ResponseEntity<>(novoAlerta, HttpStatus.CREATED);
+		} catch (IllegalArgumentException ex) {
+			return ResponseEntity.badRequest().body("Parâmetros inválidos: " + ex.getMessage());
+		} catch (Exception e) {
+			LOG.error("[POST] /api/panico/create-alerta - Erro: ", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Erro interno ao criar alerta.");
+		}
+	}
+
+	@GetMapping("/get-alerta")
+	public ResponseEntity<?> get(@RequestParam Long id) {
+		System.out.println("GET em alerta");
+		try {
+			Optional<Alerta> alerta = service.getAlerta(id);
+			if (alerta.isPresent()) {
+				return ResponseEntity.ok(alerta.get());
+			} else {
+				return ResponseEntity.badRequest().body("Parâmetros inválidos");
+			}
+		} catch (IllegalArgumentException ex) {
+			return ResponseEntity.badRequest().body("Parâmetros inválidos: " + ex.getMessage());
+		} catch (Exception e) {
+			LOG.error("[GET] /get-alerta - Erro: ", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Erro interno ao buscar alerta.");
+		}
+	}
+
+	@PutMapping("/update-alerta")
+	public ResponseEntity<?> update(@RequestParam Long id, @RequestBody Alerta alerta) {
+		try {
+			Alerta alertaAtualizado = service.updateAlerta(id, alerta);
+			return ResponseEntity.ok(alertaAtualizado);
+		} catch (IllegalArgumentException ex) {
+			return ResponseEntity.badRequest().body("Parâmetros inválidos: " + ex.getMessage());
+		} catch (Exception e) {
+			LOG.error("[PUT] /api/panico/update-alerta - Erro: ", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Erro interno ao atualizar alerta.");
+		}
+	}
+
+	@DeleteMapping("/delete-alerta")
+	public ResponseEntity<?> delete(@RequestParam Long id) {
+		try {
+			Optional<Alerta> alerta = service.getAlerta(id);
+			if (alerta.isPresent()) {
+				service.removeAlerta(alerta.get());
+				return ResponseEntity.ok().build();
+			} else {
+				return ResponseEntity.badRequest().body("Parâmetros inválidos");
+			}
+		} catch (IllegalArgumentException ex) {
+			return ResponseEntity.badRequest().body("Parâmetros inválidos: " + ex.getMessage());
+		} catch (Exception e) {
+			LOG.error("[DELETE] /delete-alerta - Erro: ", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Erro interno ao deletar alerta.");
+		}
+	}
+
 }
