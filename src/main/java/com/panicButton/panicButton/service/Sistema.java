@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class Sistema {
@@ -33,38 +34,34 @@ public class Sistema {
     }
 
     public Usuario createUsuario(Usuario usuario) {
-        usuarios.put(usuario.getMatricula(), usuario);
-        return usuario;
+        return usuarioRepository.save(usuario);
     }
 
-    public Usuario getUsuario(String matricula) {
-        return usuarios.get(matricula);
+    public Optional<Usuario> getUsuario(String matricula) {
+        return usuarioRepository.findById(Integer.valueOf(matricula));
     }
 
     public Usuario updateUsuario(String matricula, Usuario usuario) {
-        usuarios.put(matricula, usuario);
-        return usuario;
+        return usuarioRepository.save(usuario);
     }
 
-    public void removeUsuario(String matricula) {
-        usuarios.remove(matricula);
+    public void removeUsuario(Usuario usuario) {
+        usuarioRepository.delete(usuario);
     }
 
     public Alerta createAlerta(Alerta alerta) {
-        alertas.put(alerta.getId(), alerta);
-        return alerta;
+        return alertaRepository.save(alerta);
     }
 
-    public Alerta getAlerta(Long id) {
-        return alertas.get(id);
+    public Optional<Alerta> getAlerta(Long id) {
+        return alertaRepository.findById(Integer.valueOf(Math.toIntExact(id)));
     }
 
     public Alerta updateAlerta(Long id, Alerta alerta) {
-        alertas.put(id, alerta);
         return alerta;
     }
 
-    public void removeAlerta(Long id) {
-        alertas.remove(id);
+    public void removeAlerta(Alerta alerta) {
+        alertaRepository.delete(alerta);
     }
 }

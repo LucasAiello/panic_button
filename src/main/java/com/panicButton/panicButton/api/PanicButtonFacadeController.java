@@ -1,31 +1,34 @@
 package com.panicButton.panicButton.api;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import com.panicButton.panicButton.domain.Usuario;
+import com.panicButton.panicButton.service.Sistema;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/panico")
 public class PanicButtonFacadeController {
-	@GetMapping("/acionar")
-	 public String acionarPanico() {
 
-		LocalDateTime agora = LocalDateTime.now();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-		String dataHoraAcionamento = agora.format(formatter);
+	private static final Logger LOG = LoggerFactory.getLogger(PanicButtonFacadeController.class);
 
-		System.out.println("!!! BOTÃO DE PÂNICO ACIONADO EM: " + dataHoraAcionamento + " !!!");
+	@Autowired
+	private Sistema service;
 
-		// Em um cenário real, você poderia:
-		// - Enviar um e-mail para uma lista de contatos (usando Spring Mail)
-		// - Enviar um SMS (usando Twilio ou similar)
-		// - Inserir um registro em um banco de dados
-		// - Disparar uma mensagem para uma fila (Kafka, RabbitMQ)
-		// - Chamar outro serviço (webhook)
-
-		return "Botão de pânico acionado com sucesso em " + dataHoraAcionamento + "!";
+	@PostMapping("/create-usuario")
+	public ResponseEntity<?> add(@RequestBody Usuario usuario) {
+		try {
+			Usuario novoUsuario = service.createUsuario(usuario);
+			return new ResponseEntity<>(novoUsuario, HttpStatus.CREATED);
+		} catch (IllegalArgumentException ex) {
+			return new ResponseEntity<>("Parâmetros inválidos: " + ex.getMessage(), HttpStatus.BAD_REQUEST);
+		} catch (Exception e) {
+			LOG.error("[POST] /api/panico/create-usuario - Erro: ", e);
+			return new ResponseEntity<>("Erro interno ao criar usuário.", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
+
 }

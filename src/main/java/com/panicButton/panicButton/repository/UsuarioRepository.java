@@ -8,4 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface UsuarioRepository extends CrudRepository<Usuario, Integer> {
+
+    public Optional<Usuario> findByMatricula(String matricula);
 }
