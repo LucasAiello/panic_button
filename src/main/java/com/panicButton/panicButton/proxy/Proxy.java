@@ -4,6 +4,8 @@ import com.panicButton.panicButton.domain.Alerta;
 import com.panicButton.panicButton.domain.Usuario;
 import com.panicButton.panicButton.service.Sistema;
 
+import java.util.Optional;
+
 public class Proxy implements IProxy {
     private Sistema sistema = Sistema.getInstance();
 
@@ -11,12 +13,12 @@ public class Proxy implements IProxy {
         return sistema.createUsuario(usuario);
     }
 
-    public Alerta getAlerta(Long id) {
+    public Optional<Alerta> getAlerta(Long id) {
         return sistema.getAlerta(id);
     }
 
-    public void removeAlerta(Long id) {
-        sistema.removeAlerta(id);
+    public void removeAlerta(Alerta alerta) {
+        sistema.removeAlerta(alerta);
     }
 
     public Alerta createAlerta(Alerta alerta) {
@@ -27,7 +29,7 @@ public class Proxy implements IProxy {
         return sistema.updateAlerta(id, alerta);
     }
 
-    public Usuario getUsuario(String matricula) {
+    public Optional<Usuario> getUsuario(String matricula) {
         return sistema.getUsuario(matricula);
     }
 
