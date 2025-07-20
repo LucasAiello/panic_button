@@ -11,11 +11,11 @@ public class Proxy implements IProxy {
         return sistema.createUsuario(usuario);
     }
 
-    public Alerta getAlerta(int id) {
+    public Alerta getAlerta(Long id) {
         return sistema.getAlerta(id);
     }
 
-    public void removeAlerta(int id) {
+    public void removeAlerta(Long id) {
         sistema.removeAlerta(id);
     }
 
@@ -23,7 +23,7 @@ public class Proxy implements IProxy {
         return sistema.createAlerta(alerta);
     }
 
-    public Alerta updateAlerta(int id, Alerta alerta) {
+    public Alerta updateAlerta(Long id, Alerta alerta) {
         return sistema.updateAlerta(id, alerta);
     }
 
