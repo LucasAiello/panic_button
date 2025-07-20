@@ -10,7 +10,7 @@ public class Sistema {
     private static Sistema instance = null;
 
     private Map<String, Usuario> usuarios = new HashMap<>();
-    private Map<Integer, Alerta> alertas = new HashMap<>();
+    private Map<Integer, Alerta> alertas = new HashMap<>(); // TODO mudar para UUID
 
     private Sistema() {}
 
@@ -40,7 +40,7 @@ public class Sistema {
     }
 
     public Alerta createAlerta(Alerta alerta) {
-        alertas.put(alerta.getId(), alerta);
+        alertas.put(Integer.getInteger(alerta.getId().toString()), alerta);
         return alerta;
     }
 

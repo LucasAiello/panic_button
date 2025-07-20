@@ -1,7 +1,10 @@
 package com.panicButton.panicButton.domain;
 import com.panicButton.panicButton.state.iEstado;
 import jakarta.persistence.*;
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import java.util.UUID;
 
 @Entity
@@ -18,6 +21,6 @@ public class Usuario
     private iEstado estado;
 
     public Alerta criarAlerta();
-    public concluirAlerta(UUID id);
+    public void concluirAlerta(UUID id);
     public void permitirAcessoLoc();
 }

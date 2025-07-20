@@ -5,6 +5,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.UUID;
@@ -22,10 +26,10 @@ public class Alerta
     private String posicao;
     private String motivo;
     private Usuario usuario;
-    private List<iObserver> observers;
+    private List<iObserver> observadores;
 
     public void notificarObservadores() {
-        for (Observer obs : observadores) {
+        for (iObserver obs : observadores) {
             obs.atualizar(this);
         }
     }
