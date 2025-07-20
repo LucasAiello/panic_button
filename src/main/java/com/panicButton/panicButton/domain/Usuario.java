@@ -28,6 +28,6 @@ public class Usuario
     {
       return new Alerta();
     };
-    public void concluirAlerta(UUID id){};
+    public void concluirAlerta(Long id){};
     public void permitirAcessoLoc(){};
 }
