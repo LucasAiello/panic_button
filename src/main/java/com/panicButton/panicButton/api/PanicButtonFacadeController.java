@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 
 @RestController
 @RequestMapping("/api/panico")
-public class PanicButtonController {
+public class PanicButtonFacadeController {
 	@GetMapping("/acionar")
 	 public String acionarPanico() {
 

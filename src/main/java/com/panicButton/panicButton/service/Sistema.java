@@ -2,15 +2,26 @@ package com.panicButton.panicButton.service;
 
 import com.panicButton.panicButton.domain.Alerta;
 import com.panicButton.panicButton.domain.Usuario;
+import com.panicButton.panicButton.repository.AlertaRepository;
+import com.panicButton.panicButton.repository.UsuarioRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Service
 public class Sistema {
     private static Sistema instance = null;
 
     private Map<String, Usuario> usuarios = new HashMap<>();
     private Map<Long, Alerta> alertas = new HashMap<>();
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private AlertaRepository alertaRepository;
 
     private Sistema() {}
 
