@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/api/panico")
 public class PanicButtonFacadeController {
@@ -30,5 +32,21 @@ public class PanicButtonFacadeController {
 			return new ResponseEntity<>("Erro interno ao criar usuário.", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-
+	@GetMapping("/get-usuarios")
+	public ResponseEntity<?> get(@RequestParam String matricula) {
+		try {
+			Optional<Usuario> novoUsuario = service.getUsuario(matricula);
+			if (novoUsuario.isPresent()) {
+				return ResponseEntity.ok(novoUsuario.get());
+			} else {
+				return ResponseEntity.badRequest().body("Parâmetros inválidos");
+			}
+		} catch (IllegalArgumentException ex) {
+			return ResponseEntity.badRequest().body("Parâmetros inválidos: " + ex.getMessage());
+		} catch (Exception e) {
+			LOG.error("[GET] /get-usuario - Erro: ", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Erro interno ao buscar usuário.");
+		}
+	}
 }
