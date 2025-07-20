@@ -49,4 +49,19 @@ public class PanicButtonFacadeController {
 					.body("Erro interno ao buscar usuário.");
 		}
 	}
+
+	@PutMapping("/update-usuarios")
+	public ResponseEntity<?> update(@RequestParam String matricula, @RequestBody Usuario usuario) {
+		try {
+			Usuario novoUsuario = service.updateUsuario(matricula, usuario);
+			return ResponseEntity.ok(novoUsuario);
+		} catch (IllegalArgumentException ex) {
+			return ResponseEntity.badRequest().body("Parâmetros inválidos: " + ex.getMessage());
+		} catch (Exception e) {
+			LOG.error("[PUT] /api/panico/update-usuarios - Erro: ", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Erro interno ao atualizar usuário.");
+		}
+	}
+
 }
