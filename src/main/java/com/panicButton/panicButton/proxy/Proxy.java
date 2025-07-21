@@ -28,20 +28,16 @@ public class Proxy implements IProxy {
         return sistema.removeUsuario(matricula);
     }
 
-    public Optional<Alerta> getAlerta(Long id) {
-        return sistema.getAlerta(id);
-    }
-
-    public Optional<Alerta> removeAlerta(Long id) {
-        return sistema.removeAlerta(id);
-    }
-
     public Alerta createAlerta(AlertaDTO alertaDTO) {
         return sistema.createAlerta(alertaDTO);
     }
-
+    public Optional<Alerta> getAlerta(Long id) {
+        return sistema.getAlerta(id);
+    }
     public Alerta updateAlerta(AlertaDTO alertaDTO) {
         return sistema.updateAlerta(alertaDTO);
     }
-
+    public Optional<Alerta> removeAlerta(Long id) {
+        return sistema.removeAlerta(id);
+    }
 }

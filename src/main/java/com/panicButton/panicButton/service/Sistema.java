@@ -21,9 +21,6 @@ import java.util.UUID;
 public class Sistema {
     private static Sistema instance = null;
 
-    private Map<String, Usuario> usuarios = new HashMap<>();
-    private Map<Long, Alerta> alertas = new HashMap<>();
-
     @Autowired
     private UsuarioRepository usuarioRepository;
 

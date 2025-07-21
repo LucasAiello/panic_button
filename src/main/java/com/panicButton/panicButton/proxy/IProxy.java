@@ -16,7 +16,7 @@ public interface IProxy {
     Optional<Usuario> removeUsuario(String matricula);
 
     Optional<Alerta> getAlerta(Long id);
-    Optional<Alerta> removeAlerta(Alerta alerta);
-    Alerta createAlerta(Alerta alerta);
+    Optional<Alerta> removeAlerta(Long id);
+    Alerta createAlerta(AlertaDTO alertaDTO);
     Alerta updateAlerta(AlertaDTO alertaDTO);
 }
