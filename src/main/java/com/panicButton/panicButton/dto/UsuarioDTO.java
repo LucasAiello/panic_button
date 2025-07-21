@@ -3,13 +3,15 @@ package com.panicButton.panicButton.dto;
 import com.panicButton.panicButton.domain.Usuario;
 import com.panicButton.panicButton.converter.EstadoConverter;
 import lombok.Data;
+import org.locationtech.jts.geom.Point;
 
 @Data
 public class UsuarioDTO {
-    public String matricula;
-    public String nome;
-    public boolean acesso_loc;
-    public String estado;
+    private String matricula;
+    private String nome;
+    private boolean acesso_loc;
+    private String estado;
+    private Point posicao;
 
     public static UsuarioDTO fromUsuario(Usuario usuario) {
         UsuarioDTO dto = new UsuarioDTO();

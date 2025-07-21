@@ -14,9 +14,17 @@ public class Proxy implements IProxy {
     public Usuario createUsuario(UsuarioDTO usuarioDTO) {
         return sistema.createUsuario(usuarioDTO);
     }
-
     public Administrador createAdministrador(Usuario usuario) {
         return sistema.createAdministrador(usuario);
+    }
+    public Optional<Usuario> getUsuario(String matricula) {
+        return sistema.getUsuario(matricula);
+    }
+    public Usuario updateUsuario(String matricula, Usuario usuario) {
+        return sistema.updateUsuario(matricula, usuario);
+    }
+    public Optional<Usuario> removeUsuario(String matricula) {
+        return sistema.removeUsuario(matricula);
     }
 
     public Optional<Alerta> getAlerta(Long id) {
@@ -35,11 +43,4 @@ public class Proxy implements IProxy {
         return sistema.updateAlerta(id, alerta);
     }
 
-    public Optional<Usuario> getUsuario(String matricula) {
-        return sistema.getUsuario(matricula);
-    }
-
-    public Usuario updateUsuario(String matricula, Usuario usuario) {
-        return sistema.updateUsuario(matricula, usuario);
-    }
 }

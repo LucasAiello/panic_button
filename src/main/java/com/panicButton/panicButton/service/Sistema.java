@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class Sistema {
@@ -48,6 +49,7 @@ public class Sistema {
         usuario.setMatricula(usuarioDTO.getMatricula());
         usuario.setAcesso_loc(usuarioDTO.getAcesso_loc());
         usuario.setEstado(estadoConverter.convertToEntityAttribute(usuarioDTO.getEstado()));
+        usuario.setPosicao(usuarioDTO.getPosicao());
 
         return usuarioRepository.save(usuario);
     }
@@ -58,20 +60,26 @@ public class Sistema {
         adm.setMatricula(usuario.getMatricula());
         adm.setAcesso_loc(usuario.getAcesso_loc());
         adm.setEstado(usuario.getEstado());
+        adm.setPosicao(usuario.getPosicao());
+
+        String chaveAcesso = UUID.randomUUID().toString().replace("-", "").substring(0, 12);
+        adm.setChave_acesso(chaveAcesso);
 
         return administradorRepository.save(adm);
     }
 
     public Optional<Usuario> getUsuario(String matricula) {
-        return usuarioRepository.findById(Integer.valueOf(matricula));
+        return usuarioRepository.findById(matricula);
     }
 
     public Usuario updateUsuario(String matricula, Usuario usuario) {
         return usuarioRepository.save(usuario);
     }
 
-    public void removeUsuario(Usuario usuario) {
-        usuarioRepository.delete(usuario);
+    public Optional<Usuario> removeUsuario(String matricula) {
+        Optional<Usuario> usuario = usuarioRepository.findById(matricula);
+        usuario.ifPresent(usuarioRepository::delete);
+        return usuario;
     }
 
     public Alerta createAlerta(Alerta alerta) {
