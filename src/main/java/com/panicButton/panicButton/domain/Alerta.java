@@ -1,5 +1,6 @@
 package com.panicButton.panicButton.domain;
 
+import org.locationtech.jts.geom.Point;
 import com.panicButton.panicButton.observer.iObserver;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -19,7 +20,9 @@ public class Alerta
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String posicao;
+    @Column(columnDefinition = "point")
+    private Point posicao;
+
     private String motivo;
     @ManyToOne
     private Usuario usuario;
