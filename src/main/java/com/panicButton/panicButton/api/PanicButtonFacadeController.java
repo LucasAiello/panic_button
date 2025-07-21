@@ -26,7 +26,8 @@ public class PanicButtonFacadeController {
 	public ResponseEntity<?> add(@RequestBody UsuarioDTO usuarioDTO) {
 		try {
 			Usuario novoUsuario = service.createUsuario(usuarioDTO);
-			return new ResponseEntity<>(novoUsuario, HttpStatus.CREATED);
+			UsuarioDTO dto = UsuarioDTO.fromUsuario(novoUsuario);
+			return new ResponseEntity<>(dto, HttpStatus.CREATED);
 		} catch (IllegalArgumentException ex) {
 			return new ResponseEntity<>("Parâmetros inválidos: " + ex.getMessage(), HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {
@@ -39,7 +40,8 @@ public class PanicButtonFacadeController {
 		try {
 			Optional<Usuario> novoUsuario = service.getUsuario(matricula);
 			if (novoUsuario.isPresent()) {
-				return ResponseEntity.ok(novoUsuario.get());
+				UsuarioDTO dto = UsuarioDTO.fromUsuario(novoUsuario.get());
+				return ResponseEntity.ok(dto);
 			} else {
 				return ResponseEntity.badRequest().body("Parâmetros inválidos");
 			}
