@@ -3,6 +3,7 @@ package com.panicButton.panicButton.proxy;
 import com.panicButton.panicButton.domain.Administrador;
 import com.panicButton.panicButton.domain.Alerta;
 import com.panicButton.panicButton.domain.Usuario;
+import com.panicButton.panicButton.dto.AlertaDTO;
 import com.panicButton.panicButton.dto.UsuarioDTO;
 import com.panicButton.panicButton.service.Sistema;
 
@@ -20,8 +21,8 @@ public class Proxy implements IProxy {
     public Optional<Usuario> getUsuario(String matricula) {
         return sistema.getUsuario(matricula);
     }
-    public Usuario updateUsuario(String matricula, Usuario usuario) {
-        return sistema.updateUsuario(matricula, usuario);
+    public Usuario updateUsuario(UsuarioDTO usuarioDTO) {
+        return sistema.updateUsuario(usuarioDTO);
     }
     public Optional<Usuario> removeUsuario(String matricula) {
         return sistema.removeUsuario(matricula);
@@ -31,16 +32,16 @@ public class Proxy implements IProxy {
         return sistema.getAlerta(id);
     }
 
-    public void removeAlerta(Alerta alerta) {
-        sistema.removeAlerta(alerta);
+    public Optional<Alerta> removeAlerta(Long id) {
+        return sistema.removeAlerta(id);
     }
 
-    public Alerta createAlerta(Alerta alerta) {
-        return sistema.createAlerta(alerta);
+    public Alerta createAlerta(AlertaDTO alertaDTO) {
+        return sistema.createAlerta(alertaDTO);
     }
 
-    public Alerta updateAlerta(Long id, Alerta alerta) {
-        return sistema.updateAlerta(id, alerta);
+    public Alerta updateAlerta(AlertaDTO alertaDTO) {
+        return sistema.updateAlerta(alertaDTO);
     }
 
 }

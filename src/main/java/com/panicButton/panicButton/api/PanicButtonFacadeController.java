@@ -2,6 +2,7 @@ package com.panicButton.panicButton.api;
 
 import com.panicButton.panicButton.domain.Usuario;
 import com.panicButton.panicButton.domain.Alerta;
+import com.panicButton.panicButton.dto.AlertaDTO;
 import com.panicButton.panicButton.dto.UsuarioDTO;
 import com.panicButton.panicButton.proxy.Proxy;
 import com.panicButton.panicButton.service.Sistema;
@@ -55,10 +56,11 @@ public class PanicButtonFacadeController {
 	}
 
 	@PutMapping("/update-usuario")
-	public ResponseEntity<?> update(@RequestParam String matricula, @RequestBody Usuario usuario) {
+	public ResponseEntity<?> update(@RequestBody UsuarioDTO usuarioDTO) {
 		try {
-			Usuario novoUsuario = proxy.updateUsuario(matricula, usuario);
-			return ResponseEntity.ok(novoUsuario);
+			Usuario novoUsuario = proxy.updateUsuario(usuarioDTO);
+			UsuarioDTO dto = UsuarioDTO.fromUsuario(novoUsuario);
+			return ResponseEntity.ok(dto);
 		} catch (IllegalArgumentException ex) {
 			return ResponseEntity.badRequest().body("Parâmetros inválidos: " + ex.getMessage());
 		} catch (Exception e) {
@@ -87,10 +89,11 @@ public class PanicButtonFacadeController {
 	}
 
 	@PostMapping("/create-alerta")
-	public ResponseEntity<?> add(@RequestBody Alerta alerta) {
+	public ResponseEntity<?> add(@RequestBody AlertaDTO alertaDTO) {
 		try {
-			Alerta novoAlerta = proxy.createAlerta(alerta);
-			return new ResponseEntity<>(novoAlerta, HttpStatus.CREATED);
+			Alerta novoAlerta = proxy.createAlerta(alertaDTO);
+			AlertaDTO dto = AlertaDTO.fromAlerta(novoAlerta);
+			return new ResponseEntity<>(dto, HttpStatus.CREATED);
 		} catch (IllegalArgumentException ex) {
 			return ResponseEntity.badRequest().body("Parâmetros inválidos: " + ex.getMessage());
 		} catch (Exception e) {
@@ -102,13 +105,13 @@ public class PanicButtonFacadeController {
 
 	@GetMapping("/get-alerta")
 	public ResponseEntity<?> get(@RequestParam Long id) {
-		System.out.println("GET em alerta");
 		try {
 			Optional<Alerta> alerta = proxy.getAlerta(id);
 			if (alerta.isPresent()) {
-				return ResponseEntity.ok(alerta.get());
+				AlertaDTO dto = AlertaDTO.fromAlerta(alerta.get());
+				return ResponseEntity.ok(dto);
 			} else {
-				return ResponseEntity.badRequest().body("Parâmetros inválidos");
+				return ResponseEntity.badRequest().body("Alerta não encontrado");
 			}
 		} catch (IllegalArgumentException ex) {
 			return ResponseEntity.badRequest().body("Parâmetros inválidos: " + ex.getMessage());
@@ -120,10 +123,11 @@ public class PanicButtonFacadeController {
 	}
 
 	@PutMapping("/update-alerta")
-	public ResponseEntity<?> update(@RequestParam Long id, @RequestBody Alerta alerta) {
+	public ResponseEntity<?> update(@RequestBody AlertaDTO alertaDTO) {
 		try {
-			Alerta alertaAtualizado = proxy.updateAlerta(id, alerta);
-			return ResponseEntity.ok(alertaAtualizado);
+			Alerta alertaAtualizado = proxy.updateAlerta(alertaDTO);
+			AlertaDTO dto = AlertaDTO.fromAlerta(alertaAtualizado);
+			return ResponseEntity.ok(dto);
 		} catch (IllegalArgumentException ex) {
 			return ResponseEntity.badRequest().body("Parâmetros inválidos: " + ex.getMessage());
 		} catch (Exception e) {
@@ -134,14 +138,14 @@ public class PanicButtonFacadeController {
 	}
 
 	@DeleteMapping("/delete-alerta")
-	public ResponseEntity<?> delete(@RequestParam Long id) {
+	public ResponseEntity<?> delete(@RequestParam AlertaDTO alertaDTO) {
 		try {
-			Optional<Alerta> alerta = proxy.getAlerta(id);
-			if (alerta.isPresent()) {
-				service.removeAlerta(alerta.get());
-				return ResponseEntity.ok().build();
+			Optional<Alerta> deletado = proxy.removeAlerta(alertaDTO.getId());
+			if (deletado.isPresent()) {
+				AlertaDTO dto = AlertaDTO.fromAlerta(deletado.get());
+				return ResponseEntity.ok(dto);
 			} else {
-				return ResponseEntity.badRequest().body("Parâmetros inválidos");
+				return ResponseEntity.badRequest().body("Alerta não encontrado");
 			}
 		} catch (IllegalArgumentException ex) {
 			return ResponseEntity.badRequest().body("Parâmetros inválidos: " + ex.getMessage());

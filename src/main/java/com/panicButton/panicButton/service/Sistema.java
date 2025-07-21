@@ -4,6 +4,7 @@ import com.panicButton.panicButton.converter.EstadoConverter;
 import com.panicButton.panicButton.domain.Administrador;
 import com.panicButton.panicButton.domain.Alerta;
 import com.panicButton.panicButton.domain.Usuario;
+import com.panicButton.panicButton.dto.AlertaDTO;
 import com.panicButton.panicButton.dto.UsuarioDTO;
 import com.panicButton.panicButton.repository.AdministradorRepository;
 import com.panicButton.panicButton.repository.AlertaRepository;
@@ -72,7 +73,15 @@ public class Sistema {
         return usuarioRepository.findById(matricula);
     }
 
-    public Usuario updateUsuario(String matricula, Usuario usuario) {
+    public Usuario updateUsuario(UsuarioDTO usuarioDTO) {
+        Usuario usuario = getUsuario(usuarioDTO.getMatricula())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        usuario.setNome(usuarioDTO.getNome());
+        usuario.setMatricula(usuarioDTO.getMatricula());
+        usuario.setAcesso_loc(usuarioDTO.getAcesso_loc());
+        usuario.setEstado(estadoConverter.convertToEntityAttribute(usuarioDTO.getEstado()));
+        usuario.setPosicao(usuarioDTO.getPosicao());
+
         return usuarioRepository.save(usuario);
     }
 
@@ -82,19 +91,34 @@ public class Sistema {
         return usuario;
     }
 
-    public Alerta createAlerta(Alerta alerta) {
+    public Alerta createAlerta(AlertaDTO alertaDTO) {
+        Alerta alerta = new Alerta();
+        alerta.setPosicao(alertaDTO.getPosicao());
+        alerta.setMotivo(alertaDTO.getMotivo());
+        alerta.setUsuario(alertaDTO.getUsuario());
+        alerta.setObservadores(alertaDTO.getObservadores());
         return alertaRepository.save(alerta);
     }
 
     public Optional<Alerta> getAlerta(Long id) {
-        return alertaRepository.findById(Integer.valueOf(Math.toIntExact(id)));
+        return alertaRepository.findById(id);
     }
 
-    public Alerta updateAlerta(Long id, Alerta alerta) {
+    public Alerta updateAlerta(AlertaDTO alertaDTO) {
+        Alerta alerta = getAlerta(alertaDTO.getId())
+                .orElseThrow(() -> new RuntimeException("Alerta não encontrado"));
+
+        alerta.setPosicao(alertaDTO.getPosicao());
+        alerta.setMotivo(alertaDTO.getMotivo());
+        alerta.setUsuario(alertaDTO.getUsuario());
+        alerta.setObservadores(alertaDTO.getObservadores());
+
+        return alertaRepository.save(alerta);
+    }
+
+    public Optional<Alerta> removeAlerta(Long id) {
+        Optional<Alerta> alerta = alertaRepository.findById(id);
+        alerta.ifPresent(alertaRepository::delete);
         return alerta;
-    }
-
-    public void removeAlerta(Alerta alerta) {
-        alertaRepository.delete(alerta);
     }
 }
