@@ -4,4 +4,4 @@ import com.panicButton.panicButton.domain.Alerta;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AlertaRepository extends CrudRepository<Alerta, Integer> {}
+public interface AlertaRepository extends CrudRepository<Alerta, Long> {}
