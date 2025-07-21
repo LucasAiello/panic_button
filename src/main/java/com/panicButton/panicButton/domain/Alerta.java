@@ -3,15 +3,13 @@ package com.panicButton.panicButton.domain;
 import org.locationtech.jts.geom.Point;
 import com.panicButton.panicButton.observer.iObserver;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
