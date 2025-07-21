@@ -1,7 +1,11 @@
 package com.panicButton.panicButton.service;
 
+import com.panicButton.panicButton.converter.EstadoConverter;
+import com.panicButton.panicButton.domain.Administrador;
 import com.panicButton.panicButton.domain.Alerta;
 import com.panicButton.panicButton.domain.Usuario;
+import com.panicButton.panicButton.dto.UsuarioDTO;
+import com.panicButton.panicButton.repository.AdministradorRepository;
 import com.panicButton.panicButton.repository.AlertaRepository;
 import com.panicButton.panicButton.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +28,11 @@ public class Sistema {
     @Autowired
     private AlertaRepository alertaRepository;
 
+    @Autowired
+    private AdministradorRepository administradorRepository;
+
+    EstadoConverter estadoConverter = new EstadoConverter();
+
     private Sistema() {}
 
     public static Sistema getInstance() {
@@ -33,8 +42,24 @@ public class Sistema {
         return instance;
     }
 
-    public Usuario createUsuario(Usuario usuario) {
+    public Usuario createUsuario(UsuarioDTO usuarioDTO) {
+        Usuario usuario = new Usuario();
+        usuario.setNome(usuarioDTO.getNome());
+        usuario.setMatricula(usuarioDTO.getMatricula());
+        usuario.setAcesso_loc(usuarioDTO.getAcesso_loc());
+        usuario.setEstado(estadoConverter.convertToEntityAttribute(usuarioDTO.getEstado()));
+
         return usuarioRepository.save(usuario);
+    }
+
+    public Administrador createAdministrador(Usuario usuario) {
+        Administrador adm = new Administrador();
+        adm.setNome(usuario.getNome());
+        adm.setMatricula(usuario.getMatricula());
+        adm.setAcesso_loc(usuario.getAcesso_loc());
+        adm.setEstado(usuario.getEstado());
+
+        return administradorRepository.save(adm);
     }
 
     public Optional<Usuario> getUsuario(String matricula) {

@@ -8,4 +8,8 @@ public class UsuarioDTO {
     private String nome;
     private boolean acesso_loc;
     private String estado;
+
+    public boolean getAcesso_loc() {
+        return acesso_loc;
+    }
 }

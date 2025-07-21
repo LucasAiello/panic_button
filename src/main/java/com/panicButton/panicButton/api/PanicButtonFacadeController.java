@@ -2,6 +2,7 @@ package com.panicButton.panicButton.api;
 
 import com.panicButton.panicButton.domain.Usuario;
 import com.panicButton.panicButton.domain.Alerta;
+import com.panicButton.panicButton.dto.UsuarioDTO;
 import com.panicButton.panicButton.service.Sistema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,9 +23,9 @@ public class PanicButtonFacadeController {
 	private Sistema service;
 
 	@PostMapping("/create-usuario")
-	public ResponseEntity<?> add(@RequestBody Usuario usuario) {
+	public ResponseEntity<?> add(@RequestBody UsuarioDTO usuarioDTO) {
 		try {
-			Usuario novoUsuario = service.createUsuario(usuario);
+			Usuario novoUsuario = service.createUsuario(usuarioDTO);
 			return new ResponseEntity<>(novoUsuario, HttpStatus.CREATED);
 		} catch (IllegalArgumentException ex) {
 			return new ResponseEntity<>("Parâmetros inválidos: " + ex.getMessage(), HttpStatus.BAD_REQUEST);

@@ -1,7 +1,9 @@
 package com.panicButton.panicButton.proxy;
 
+import com.panicButton.panicButton.domain.Administrador;
 import com.panicButton.panicButton.domain.Alerta;
 import com.panicButton.panicButton.domain.Usuario;
+import com.panicButton.panicButton.dto.UsuarioDTO;
 import com.panicButton.panicButton.service.Sistema;
 
 import java.util.Optional;
@@ -9,8 +11,12 @@ import java.util.Optional;
 public class Proxy implements IProxy {
     private Sistema sistema = Sistema.getInstance();
 
-    public Usuario createUsuario(Usuario usuario) {
-        return sistema.createUsuario(usuario);
+    public Usuario createUsuario(UsuarioDTO usuarioDTO) {
+        return sistema.createUsuario(usuarioDTO);
+    }
+
+    public Administrador createAdministrador(Usuario usuario) {
+        return sistema.createAdministrador(usuario);
     }
 
     public Optional<Alerta> getAlerta(Long id) {
