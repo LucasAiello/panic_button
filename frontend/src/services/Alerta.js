@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Instância axios configurada com baseURL da sua API
 const api = axios.create({
-  baseURL: 'http://localhost:8082/api/panico',
+  baseURL: 'api/panico',
 });
 
 class AlertaService {
