@@ -19,7 +19,7 @@ import java.util.UUID;
 
 @Service
 public class Sistema {
-    private static Sistema instance = null;
+    private static Sistema instance;
 
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -30,16 +30,15 @@ public class Sistema {
     @Autowired
     private AdministradorRepository administradorRepository;
 
-    EstadoConverter estadoConverter = new EstadoConverter();
-
-    private Sistema() {}
-
+    @Autowired
+    public void setInstance() {
+        instance = this;
+    }
     public static Sistema getInstance() {
-        if (instance == null) {
-            instance = new Sistema();
-        }
         return instance;
     }
+
+    EstadoConverter estadoConverter = new EstadoConverter();
 
     public Usuario createUsuario(UsuarioDTO usuarioDTO) {
         Usuario usuario = new Usuario();

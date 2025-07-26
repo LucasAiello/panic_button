@@ -6,13 +6,19 @@ import com.panicButton.panicButton.domain.Usuario;
 import com.panicButton.panicButton.dto.AlertaDTO;
 import com.panicButton.panicButton.dto.UsuarioDTO;
 import com.panicButton.panicButton.service.Sistema;
+import org.hibernate.annotations.Comment;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
-
+@Component
 public class Proxy implements IProxy {
-    private Sistema sistema = Sistema.getInstance();
+    private final Sistema sistema;
 
-    public Usuario createUsuario(UsuarioDTO usuarioDTO) {
+    public Proxy(Sistema sistema) {
+        this.sistema = sistema;
+    }
+
+        public Usuario createUsuario(UsuarioDTO usuarioDTO) {
         return sistema.createUsuario(usuarioDTO);
     }
     public Administrador createAdministrador(Usuario usuario) {

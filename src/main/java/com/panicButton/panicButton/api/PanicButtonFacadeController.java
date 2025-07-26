@@ -1,5 +1,5 @@
 package com.panicButton.panicButton.api;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import com.panicButton.panicButton.domain.Usuario;
 import com.panicButton.panicButton.domain.Alerta;
 import com.panicButton.panicButton.dto.AlertaDTO;
@@ -20,6 +20,11 @@ public class PanicButtonFacadeController {
 	private static final Logger LOG = LoggerFactory.getLogger(PanicButtonFacadeController.class);
 
 	private Proxy proxy;
+
+	@Autowired
+	public PanicButtonFacadeController(Proxy proxy) {
+		this.proxy = proxy;
+	}
 
 	@PostMapping("/create-usuario")
 	public ResponseEntity<?> add(@RequestBody UsuarioDTO usuarioDTO) {
@@ -89,6 +94,8 @@ public class PanicButtonFacadeController {
 	@PostMapping("/create-alerta")
 	public ResponseEntity<?> add(@RequestBody AlertaDTO alertaDTO) {
 		try {
+			System.out.println(alertaDTO);
+			System.out.println(proxy);
 			Alerta novoAlerta = proxy.createAlerta(alertaDTO);
 			AlertaDTO dto = AlertaDTO.fromAlerta(novoAlerta);
 			return new ResponseEntity<>(dto, HttpStatus.CREATED);
