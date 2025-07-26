@@ -47,7 +47,8 @@ public class Sistema {
         usuario.setMatricula(usuarioDTO.getMatricula());
         usuario.setAcesso_loc(usuarioDTO.getAcesso_loc());
         usuario.setEstado(estadoConverter.convertToEntityAttribute(usuarioDTO.getEstado()));
-        usuario.setPosicao(usuarioDTO.getPosicao());
+        usuario.setLatitude(usuarioDTO.getLatitude());
+        usuario.setLongitude(usuarioDTO.getLongitude());
 
         return usuarioRepository.save(usuario);
     }
@@ -58,7 +59,8 @@ public class Sistema {
         adm.setMatricula(usuario.getMatricula());
         adm.setAcesso_loc(usuario.getAcesso_loc());
         adm.setEstado(usuario.getEstado());
-        adm.setPosicao(usuario.getPosicao());
+        adm.setLatitude(usuario.getLatitude());
+        adm.setLongitude(usuario.getLongitude());
 
         String chaveAcesso = UUID.randomUUID().toString().replace("-", "").substring(0, 12);
         adm.setChave_acesso(chaveAcesso);
@@ -77,7 +79,8 @@ public class Sistema {
         usuario.setMatricula(usuarioDTO.getMatricula());
         usuario.setAcesso_loc(usuarioDTO.getAcesso_loc());
         usuario.setEstado(estadoConverter.convertToEntityAttribute(usuarioDTO.getEstado()));
-        usuario.setPosicao(usuarioDTO.getPosicao());
+        usuario.setLatitude(usuarioDTO.getLatitude());
+        usuario.setLongitude(usuarioDTO.getLongitude());
 
         return usuarioRepository.save(usuario);
     }
@@ -90,7 +93,8 @@ public class Sistema {
 
     public Alerta createAlerta(AlertaDTO alertaDTO) {
         Alerta alerta = new Alerta();
-        alerta.setPosicao(alertaDTO.getPosicao());
+        alerta.setLatitude(alertaDTO.getLatitude());
+        alerta.setLongitude(alertaDTO.getLongitude());
         alerta.setMotivo(alertaDTO.getMotivo());
         alerta.setUsuario(alertaDTO.getUsuario());
         alerta.setObservadores(alertaDTO.getObservadores());
@@ -105,7 +109,8 @@ public class Sistema {
         Alerta alerta = getAlerta(alertaDTO.getId())
                 .orElseThrow(() -> new RuntimeException("Alerta não encontrado"));
 
-        alerta.setPosicao(alertaDTO.getPosicao());
+        alerta.setLatitude(alertaDTO.getLatitude());
+        alerta.setLongitude(alertaDTO.getLongitude());
         alerta.setMotivo(alertaDTO.getMotivo());
         alerta.setUsuario(alertaDTO.getUsuario());
         alerta.setObservadores(alertaDTO.getObservadores());

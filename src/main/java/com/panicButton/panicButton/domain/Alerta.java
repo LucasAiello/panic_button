@@ -18,8 +18,8 @@ public class Alerta
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(columnDefinition = "point")
-    private Point posicao;
+    private double longitude;
+    private double latitude;
 
     private String motivo;
     @ManyToOne

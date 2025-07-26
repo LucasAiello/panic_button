@@ -11,7 +11,8 @@ import java.util.List;
 @Data
 public class AlertaDTO {
     private Long id;
-    private Point posicao;
+    private double longitude;
+    private double latitude;
     private String motivo;
     private Usuario usuario;
     private List<iObserver> observadores;
@@ -19,7 +20,8 @@ public class AlertaDTO {
     public static AlertaDTO fromAlerta(Alerta alerta) {
         AlertaDTO dto = new AlertaDTO();
         dto.setId(alerta.getId());
-        dto.setPosicao(alerta.getPosicao());
+        dto.latitude = alerta.getLatitude();
+        dto.longitude = alerta.getLongitude();
         dto.setMotivo(alerta.getMotivo());
         dto.setUsuario(alerta.getUsuario());
         dto.setObservadores(alerta.getObservadores());

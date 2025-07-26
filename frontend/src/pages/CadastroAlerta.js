@@ -6,7 +6,8 @@ export default function AlertaForm() {
   const [form, setForm] = useState({
     titulo: '',
     descricao: '',
-    localizacao: '',
+    longitude: '',
+    latitude: '',
     prioridade: ''
   });
 
@@ -20,7 +21,7 @@ export default function AlertaForm() {
     alertaService.criarAlerta(form)
       .then(() => {
         alert('Alerta criado com sucesso!');
-        setForm({ titulo: '', descricao: '', localizacao: '', prioridade: '' });
+        setForm({ titulo: '', descricao: '', longitude: '', latitude: '', prioridade: '' });
       })
       .catch(() => {
         alert('Erro ao criar alerta');
@@ -46,9 +47,16 @@ export default function AlertaForm() {
           style={styles.input}
         />
         <input
-          name="localizacao"
-          placeholder="Localização"
-          value={form.localizacao}
+          name="longitude"
+          placeholder="Longitude"
+          value={form.longitude}
+          onChange={handleChange}
+          style={styles.input}
+        />
+        <input
+          name="latitude"
+          placeholder="Latitude"
+          value={form.latitude}
           onChange={handleChange}
           style={styles.input}
         />

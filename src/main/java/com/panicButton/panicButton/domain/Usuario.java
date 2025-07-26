@@ -4,7 +4,7 @@ import com.panicButton.panicButton.state.iEstado;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.Coordinate;
 
 
 @Entity
@@ -21,7 +21,8 @@ public class Usuario
     private boolean acesso_loc;
     @Convert(converter = EstadoConverter.class)
     private iEstado estado;
-    private Point posicao;
+    private double longitude;
+    private double latitude;
 
     public Alerta criarAlerta()
     {
