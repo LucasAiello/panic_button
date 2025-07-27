@@ -18,8 +18,6 @@ import com.panicButton.panicButton.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -45,6 +43,9 @@ public class Sistema {
 
     @Autowired
     private AdministradorRepository administradorRepository;
+
+    @Autowired
+    private EmailService emailService;
 
     public void setInstance() {
         instance = this;
@@ -119,10 +120,12 @@ public class Sistema {
 
         Point ponto = geometryFactory.createPoint(new Coordinate(alertaDTO.getLatitude(), alertaDTO.getLongitude()));
         if(quadrilatero.contains(ponto)) {
+            String body = "Um alerta foi criado por motivo de: " + alertaDTO.getMotivo();
+            emailService.sendEmail("lucas.n.aiello@gmail.com", "Alerta!", body);
             return alertaRepository.save(alerta);
         }
         else {
-            return new Alerta();
+            throw new Error("Localização Invalida");
         }
     }
 
