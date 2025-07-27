@@ -1,5 +1,11 @@
 package com.panicButton.panicButton.service;
 
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.LinearRing;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.Polygon;
+
 import com.panicButton.panicButton.converter.EstadoConverter;
 import com.panicButton.panicButton.domain.Administrador;
 import com.panicButton.panicButton.domain.Alerta;
@@ -19,6 +25,16 @@ import java.util.UUID;
 
 @Service
 public class Sistema {
+    GeometryFactory geometryFactory = new GeometryFactory();
+
+    static final Coordinate[] coords = new Coordinate[] {
+            new Coordinate(-7.238372714431187, -35.91495364062937),
+            new Coordinate(-7.239280057653925, -35.91720937834884),
+            new Coordinate(-7.240870418729719, -35.913960759230775),
+            new Coordinate(-7.241666958311792, -35.916112467917074),
+            new Coordinate(-7.238372714431187, -35.91495364062937) // fechar poligono
+    };
+
     private static Sistema instance;
 
     @Autowired
@@ -30,11 +46,11 @@ public class Sistema {
     @Autowired
     private AdministradorRepository administradorRepository;
 
-    @Autowired
     public void setInstance() {
         instance = this;
     }
-    public static Sistema getInstance() {
+
+    public static Sistema getInstance(){
         return instance;
     }
 
@@ -97,7 +113,17 @@ public class Sistema {
         alerta.setMotivo(alertaDTO.getMotivo());
         alerta.setUsuario(alertaDTO.getUsuario());
         alerta.setObservadores(alertaDTO.getObservadores());
-        return alertaRepository.save(alerta);
+
+        LinearRing shell = geometryFactory.createLinearRing(coords);
+        Polygon quadrilatero = geometryFactory.createPolygon(shell, null);
+
+        Point ponto = geometryFactory.createPoint(new Coordinate(alertaDTO.getLatitude(), alertaDTO.getLongitude()));
+        if(quadrilatero.contains(ponto)) {
+            return alertaRepository.save(alerta);
+        }
+        else {
+            return new Alerta();
+        }
     }
 
     public Optional<Alerta> getAlerta(Long id) {
