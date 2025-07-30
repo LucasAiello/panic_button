@@ -4,7 +4,7 @@ export default function useUsuarioId() {
   const [usuarioId, setUsuarioId] = useState('');
 
   useEffect(() => {
-    let id = localStorage.getItem('usuarioId');
+    let id = localStorage.getItem('matricula');
 
     if (!id) {
       // Solicita ao usuário que digite um ID
