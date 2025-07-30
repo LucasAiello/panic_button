@@ -18,6 +18,7 @@ import com.panicButton.panicButton.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -112,8 +113,9 @@ public class Sistema {
         alerta.setLatitude(alertaDTO.getLatitude());
         alerta.setLongitude(alertaDTO.getLongitude());
         alerta.setMotivo(alertaDTO.getMotivo());
-        alerta.setUsuario(alertaDTO.getUsuario());
+        alerta.setUsuarioId(alertaDTO.getUsuarioId());
         alerta.setObservadores(alertaDTO.getObservadores());
+        alerta.setAtivo(alertaDTO.getAtivo());
 
         LinearRing shell = geometryFactory.createLinearRing(coords);
         Polygon quadrilatero = geometryFactory.createPolygon(shell, null);
@@ -129,19 +131,25 @@ public class Sistema {
         }
     }
 
-    public Optional<Alerta> getAlerta(Long id) {
-        return alertaRepository.findById(id);
+    public List<Alerta> getAlerta(Long id) {
+        return alertaRepository.findByUsuarioId(id);
+    }
+
+    public Iterable<Alerta> getAlertasAtivos() {
+        return alertaRepository.findAll();
     }
 
     public Alerta updateAlerta(AlertaDTO alertaDTO) {
-        Alerta alerta = getAlerta(alertaDTO.getId())
-                .orElseThrow(() -> new RuntimeException("Alerta não encontrado"));
-
+        Alerta alerta = (Alerta) getAlerta(alertaDTO.getUsuarioId());
+        if (alerta == null) {
+            throw new RuntimeException("Alerta não encontrado");
+        }
         alerta.setLatitude(alertaDTO.getLatitude());
         alerta.setLongitude(alertaDTO.getLongitude());
         alerta.setMotivo(alertaDTO.getMotivo());
-        alerta.setUsuario(alertaDTO.getUsuario());
+        alerta.setUsuarioId(alertaDTO.getUsuarioId());
         alerta.setObservadores(alertaDTO.getObservadores());
+        alerta.setAtivo(alertaDTO.getAtivo());
 
         return alertaRepository.save(alerta);
     }

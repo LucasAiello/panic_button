@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import usuarioService from '../services/Usuario'; // importe o serviço correto
+import usuarioService from '../services/Usuario';
 import styles from '../styles';
 
 export default function UsuarioForm() {

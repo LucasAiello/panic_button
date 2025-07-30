@@ -4,7 +4,6 @@ import com.panicButton.panicButton.domain.Alerta;
 import com.panicButton.panicButton.domain.Usuario;
 import com.panicButton.panicButton.observer.iObserver;
 import lombok.Data;
-import org.locationtech.jts.geom.Point;
 
 import java.util.List;
 
@@ -14,8 +13,9 @@ public class AlertaDTO {
     private double longitude;
     private double latitude;
     private String motivo;
-    private Usuario usuario;
+    private Long usuarioId;
     private List<iObserver> observadores;
+    private Integer ativo;
 
     public static AlertaDTO fromAlerta(Alerta alerta) {
         AlertaDTO dto = new AlertaDTO();
@@ -23,8 +23,9 @@ public class AlertaDTO {
         dto.latitude = alerta.getLatitude();
         dto.longitude = alerta.getLongitude();
         dto.setMotivo(alerta.getMotivo());
-        dto.setUsuario(alerta.getUsuario());
+        dto.setUsuarioId(alerta.getUsuarioId());
         dto.setObservadores(alerta.getObservadores());
+        dto.setAtivo(alerta.getAtivo());
         return dto;
     }
 

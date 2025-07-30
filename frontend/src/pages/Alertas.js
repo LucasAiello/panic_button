@@ -1,15 +1,26 @@
 import { useEffect, useState } from 'react';
+import alertaService from '../services/Alerta'
 import styles from '../styles';
 
-const Alertas = () => {
+ const Alertas = () => {
   const [alertas, setAlertas] = useState([]);
+  const [ids] = useState([1, 2, 3]); 
 
   useEffect(() => {
-    fetch('http://localhost:8080/alertas')
-      .then((res) => res.json())
-      .then((data) => setAlertas(data))
-      .catch((err) => console.error('Erro ao buscar alertas:', err));
-  }, []);
+    const buscarAlertasInativos = async () => {
+      try {
+        const resultados = await Promise.all(
+          ids.map(ativo => alertaService.buscarAlerta(ativo))
+        );
+        const inativos = resultados.filter(alerta => alerta.ativo === 0);
+        setAlertas(inativos);
+        } catch (err) {
+        console.error('Erro ao buscar alertas:', err);
+      }
+    };
+
+    buscarAlertasInativos();
+  }, [ids]);
 
   return (
     <div style={styles.alertasContainer}>

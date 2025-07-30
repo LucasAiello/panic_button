@@ -22,10 +22,12 @@ public class Alerta
     private double latitude;
 
     private String motivo;
-    @ManyToOne
-    private Usuario usuario;
+    @Column(name = "usuario_id")
+    private Long usuarioId;
     @Transient
     private List<iObserver> observadores;
+
+    private Integer ativo;
 
     public void notificarObservadores() {
         for (iObserver obs : observadores) {

@@ -6,6 +6,7 @@ import com.panicButton.panicButton.domain.Usuario;
 import com.panicButton.panicButton.dto.AlertaDTO;
 import com.panicButton.panicButton.dto.UsuarioDTO;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface IProxy {
@@ -15,7 +16,8 @@ public interface IProxy {
     Usuario updateUsuario(UsuarioDTO usuarioDTO);
     Optional<Usuario> removeUsuario(String matricula);
 
-    Optional<Alerta> getAlerta(Long id);
+    List<Alerta> getAlerta(Long id);
+    Iterable<Alerta> getAlertasAtivos();
     Optional<Alerta> removeAlerta(Long id);
     Alerta createAlerta(AlertaDTO alertaDTO);
     Alerta updateAlerta(AlertaDTO alertaDTO);

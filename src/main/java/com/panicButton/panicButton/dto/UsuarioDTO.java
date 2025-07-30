@@ -1,9 +1,12 @@
 package com.panicButton.panicButton.dto;
 
+import com.panicButton.panicButton.domain.Alerta;
 import com.panicButton.panicButton.domain.Usuario;
 import com.panicButton.panicButton.converter.EstadoConverter;
 import lombok.Data;
 import org.locationtech.jts.geom.Point;
+
+import java.util.List;
 
 @Data
 public class UsuarioDTO {
@@ -13,6 +16,7 @@ public class UsuarioDTO {
     private String estado;
     private double longitude;
     private double latitude;
+    private List<Alerta> alertas;
 
     public static UsuarioDTO fromUsuario(Usuario usuario) {
         UsuarioDTO dto = new UsuarioDTO();

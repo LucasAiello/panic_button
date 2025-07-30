@@ -1,0 +1,72 @@
+import React, { useEffect, useRef, useState } from 'react';
+import 'ol/ol.css';
+import alertaService from '../services/Alerta'
+import { Map, View } from 'ol';
+import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
+import { OSM, Vector as VectorSource } from 'ol/source';
+import { Point } from 'ol/geom';
+import Feature from 'ol/Feature';
+import { fromLonLat } from 'ol/proj';
+import Style from 'ol/style/Style';
+import Icon from 'ol/style/Icon';
+
+export default function MapaAlertas() {
+  const mapRef = useRef();
+  const [vectorSource] = useState(new VectorSource());
+
+  useEffect(() => {
+    const map = new Map({
+      target: mapRef.current,
+      layers: [
+        new TileLayer({ source: new OSM() }),
+        new VectorLayer({ source: vectorSource })
+      ],
+      view: new View({
+        center: fromLonLat([-35.9164, -7.2397]), 
+        zoom: 18
+      })
+    });
+
+    const fetchAlertas = async () => {
+      try {
+       const resultados = await alertaService.buscarAlertasPorAtivo();
+
+        const ativos = resultados.filter(alerta => alerta.ativo === 1);
+
+        vectorSource.clear();
+
+        if (ativos.length > 0) {
+          data.forEach(alerta => {
+            const coord = fromLonLat([alerta.longitude, alerta.latitude]);
+            const feature = new Feature(new Point(coord));
+
+            feature.setStyle(new Style({
+              image: new Icon({
+                anchor: [0.5, 1],
+                src: 'https://cdn-icons-png.flaticon.com/512/1828/1828665.png',
+                scale: 0.07
+              })
+            }));
+
+            vectorSource.addFeature(feature);
+          });
+
+          alert('⚠️ ALERTA(S) ATIVO(S) DETECTADO(S)!');
+        }
+      } catch (error) {
+        console.error('Erro ao buscar alertas:', error);
+      }
+    };
+
+    fetchAlertas();
+    const intervalId = setInterval(fetchAlertas, 10000);
+
+    return () => clearInterval(intervalId);
+  }, [vectorSource]);
+
+  return (
+    <div style={{ boxShadow: '0 2px 6px rgba(0,0,0,0.1)', borderRadius: '8px', overflow: 'hidden' }}>
+      <div ref={mapRef} style={{ width: '100%', height: '500px' }} />
+    </div>
+  );
+}

@@ -6,6 +6,9 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.locationtech.jts.geom.Coordinate;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Entity
 @Getter
@@ -23,6 +26,8 @@ public class Usuario
     private iEstado estado;
     private double longitude;
     private double latitude;
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Alerta> alertas = new ArrayList<>();
 
     public Alerta criarAlerta()
     {

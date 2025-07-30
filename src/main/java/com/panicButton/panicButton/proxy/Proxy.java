@@ -6,9 +6,9 @@ import com.panicButton.panicButton.domain.Usuario;
 import com.panicButton.panicButton.dto.AlertaDTO;
 import com.panicButton.panicButton.dto.UsuarioDTO;
 import com.panicButton.panicButton.service.Sistema;
-import org.hibernate.annotations.Comment;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 @Component
 public class Proxy implements IProxy {
@@ -37,8 +37,11 @@ public class Proxy implements IProxy {
     public Alerta createAlerta(AlertaDTO alertaDTO) {
         return sistema.createAlerta(alertaDTO);
     }
-    public Optional<Alerta> getAlerta(Long id) {
+    public List<Alerta> getAlerta(Long id) {
         return sistema.getAlerta(id);
+    }
+    public Iterable<Alerta> getAlertasAtivos() {
+        return sistema.getAlertasAtivos();
     }
     public Alerta updateAlerta(AlertaDTO alertaDTO) {
         return sistema.updateAlerta(alertaDTO);

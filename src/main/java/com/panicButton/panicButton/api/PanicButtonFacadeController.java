@@ -11,7 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/panico")
@@ -111,10 +113,33 @@ public class PanicButtonFacadeController {
 	@GetMapping("/get-alerta")
 	public ResponseEntity<?> get(@RequestParam Long id) {
 		try {
-			Optional<Alerta> alerta = proxy.getAlerta(id);
-			if (alerta.isPresent()) {
-				AlertaDTO dto = AlertaDTO.fromAlerta(alerta.get());
-				return ResponseEntity.ok(dto);
+			List<Alerta> alertas = proxy.getAlerta(id);
+			if (!alertas.isEmpty()) {
+				List<AlertaDTO> dtos = alertas.stream()
+						.map(AlertaDTO::fromAlerta)
+						.collect(Collectors.toList());
+				return ResponseEntity.ok(dtos);
+			} else {
+				return ResponseEntity.badRequest().body("Alerta não encontrado");
+			}
+		} catch (IllegalArgumentException ex) {
+			return ResponseEntity.badRequest().body("Parâmetros inválidos: " + ex.getMessage());
+		} catch (Exception e) {
+			LOG.error("[GET] /get-alerta - Erro: ", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Erro interno ao buscar alerta.");
+		}
+	}
+
+	@GetMapping("/get-alerta-ativos")
+	public ResponseEntity<?> getAtivos() {
+		try {
+			List<Alerta> alertas = (List<Alerta>) proxy.getAlertasAtivos();
+			if (!alertas.isEmpty()) {
+				List<AlertaDTO> dtos = alertas.stream()
+						.map(AlertaDTO::fromAlerta)
+						.collect(Collectors.toList());
+				return ResponseEntity.ok(dtos);
 			} else {
 				return ResponseEntity.badRequest().body("Alerta não encontrado");
 			}

@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-// Instância axios configurada com baseURL da sua API
 const api = axios.create({
   baseURL: 'api/panico',
 });
@@ -15,8 +14,17 @@ class AlertaService {
       });
   }
 
-  buscarAlerta(id) {
+ buscarAlerta(id) {
     return api.get('/get-alerta', { params: { id } })
+      .then(res => res.data)
+      .catch(error => {
+        console.error('Erro ao buscar alerta:', error.response?.data || error.message);
+        throw error;
+      });
+  }
+
+  buscarAlertasPorAtivo() {
+    return api.get('/get-alerta-ativos')
       .then(res => res.data)
       .catch(error => {
         console.error('Erro ao buscar alerta:', error.response?.data || error.message);
