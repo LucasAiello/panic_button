@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Home from './pages/Home';
 import Alertas from './pages/Alertas';
+import CadastroAlerta from './pages/CadastroAlerta';
 import styles from './styles';
 import MapaAlertas from './pages/MapaAlerta';
 
@@ -22,6 +23,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/mapa" element={<MapaAlertas />} />
           <Route path="/alertas" element={<Alertas />} />
+            <Route path="/cadastroAlerta" element={<CadastroAlerta />} />
         </Routes>
       </main>
     </Router>
