@@ -63,7 +63,12 @@ public class Sistema {
         Optional<Usuario> opt_user = usuarioRepository.findById(matricula);
         if(opt_user.isPresent()) {
             Usuario usuario = opt_user.get();
-            return usuario.getEmail().equals(email);
+            if(usuario instanceof Administrador && ((Administrador) usuario).getChave_acesso().equals(email)){
+                return true;
+            }
+            else {
+                return usuario.getEmail().equals(email);
+            }
         }
 
         throw new Error("Usuario nao encontrado");
@@ -149,6 +154,9 @@ public class Sistema {
             throw new Error("Usuario não ativo");
         }
 
+    }
+    public Iterable<Usuario> getUsuarios() {
+        return usuarioRepository.findAll();
     }
 
     public List<Alerta> getAlerta(Usuario usuario) {

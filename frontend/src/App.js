@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './contexts/AuthContext';
+import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
 import Login from './pages/Login';
 import Home from './pages/Home';
@@ -8,6 +8,7 @@ import Alertas from './pages/Alertas';
 import CadastroAlerta from './pages/CadastroAlerta';
 import MapaAlertas from './pages/MapaAlerta';
 import styles from './styles';
+import Gerenciar from './pages/Gerenciar';
 
 function App() {
   return (
@@ -19,6 +20,9 @@ function App() {
             <a href="/" style={styles.link}>Início</a>
             <a href="/mapa" style={styles.link}>Alertas</a>
             <a href="/alertas" style={styles.link}>Últimos alertas</a>
+            {localStorage.getItem("admin") && (
+              <a href="/gerenciar" style={styles.link}>Gerenciar Usuários</a>
+            )}
           </nav>
         </header>
 
@@ -46,6 +50,12 @@ function App() {
                 <CadastroAlerta />
               </PrivateRoute>
             } />
+            <Route path="/gerenciar" element={
+              <PrivateRoute>
+                <Gerenciar />
+              </PrivateRoute>
+            } />
+            
           </Routes>
         </main>
       </Router>

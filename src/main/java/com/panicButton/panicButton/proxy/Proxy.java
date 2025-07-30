@@ -27,6 +27,9 @@ public class Proxy implements IProxy {
     public Optional<Usuario> getUsuario(String matricula) {
         return sistema.getUsuario(matricula);
     }
+    public Iterable<Usuario> getUsuarios() {
+        return sistema.getUsuarios();
+    }
     public boolean autentificar (String matricula, String email) {return sistema.autentificar(matricula, email);}
     public Usuario updateUsuario(UsuarioDTO usuarioDTO) {
         return sistema.updateUsuario(usuarioDTO);

@@ -1,4 +1,5 @@
 package com.panicButton.panicButton.api;
+import com.panicButton.panicButton.domain.Administrador;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.panicButton.panicButton.domain.Usuario;
 import com.panicButton.panicButton.domain.Alerta;
@@ -41,6 +42,27 @@ public class PanicButtonFacadeController {
 			return new ResponseEntity<>("Erro interno ao criar usuário.", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	@GetMapping("/get-usuarios")
+	public ResponseEntity<?> getUsuarios() {
+		try {
+			List<Usuario> usuarios = (List<Usuario>) proxy.getUsuarios();
+			if (!usuarios.isEmpty()) {
+				List<UsuarioDTO> dtos = usuarios.stream()
+						.map(UsuarioDTO::fromUsuario)
+						.collect(Collectors.toList());
+				return ResponseEntity.ok(dtos);
+			} else {
+				return ResponseEntity.badRequest().body("Usuarios não encontrado");
+			}
+		} catch (IllegalArgumentException ex) {
+			return ResponseEntity.badRequest().body("Parâmetros inválidos: " + ex.getMessage());
+		} catch (Exception e) {
+			LOG.error("[GET] /get-usuario - Erro: ", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Erro interno ao buscar usuário.");
+		}
+	}
+
 	@GetMapping("/get-usuario")
 	public ResponseEntity<?> getUsuario(@RequestParam String matricula) {
 		try {
@@ -132,6 +154,30 @@ public class PanicButtonFacadeController {
 			LOG.error("[GET] /get-alerta - Erro: ", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body("Erro interno ao buscar alerta.");
+		}
+	}
+
+	@GetMapping("/admin")
+	public ResponseEntity<?> admin(@RequestParam String matricula) {
+		try {
+			Optional<Usuario> opt = proxy.getUsuario(matricula);
+			if(opt.isPresent()){
+				Usuario usuario = opt.get();
+				if(usuario instanceof Administrador){
+					return ResponseEntity.ok().body("Autorizado");
+				}
+				else{
+					return ResponseEntity.badRequest().body("Não autorizado");
+				}
+			} else {
+				return ResponseEntity.badRequest().body("Usuario nao encontrado");
+			}
+		} catch (IllegalArgumentException ex) {
+			return ResponseEntity.badRequest().body("Parâmetros inválidos: " + ex.getMessage());
+		} catch (Exception e) {
+			LOG.error("[GET] /autentificar - Erro: ", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Erro interno ao autentificar.");
 		}
 	}
 

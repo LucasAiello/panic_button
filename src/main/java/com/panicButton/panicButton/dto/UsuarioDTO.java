@@ -1,5 +1,6 @@
 package com.panicButton.panicButton.dto;
 
+import com.panicButton.panicButton.domain.Administrador;
 import com.panicButton.panicButton.domain.Alerta;
 import com.panicButton.panicButton.domain.Usuario;
 import com.panicButton.panicButton.converter.EstadoConverter;
@@ -16,6 +17,7 @@ public class UsuarioDTO {
     private String estado;
     private double longitude;
     private double latitude;
+    private boolean admin;
     private List<Alerta> alertas;
 
     public static UsuarioDTO fromUsuario(Usuario usuario) {
@@ -26,6 +28,7 @@ public class UsuarioDTO {
         dto.estado = new EstadoConverter().convertToDatabaseColumn(usuario.getEstado());
         dto.longitude = usuario.getLongitude();
         dto.latitude = usuario.getLatitude();
+        dto.admin = usuario instanceof Administrador;
         return dto;
     }
     public boolean getAcesso_loc() {
