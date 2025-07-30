@@ -132,6 +132,27 @@ public class PanicButtonFacadeController {
 		}
 	}
 
+	@GetMapping("/get-alertas")
+	public ResponseEntity<?> getAlertas() {
+		try {
+			List<Alerta> alertas = (List<Alerta>) proxy.getAlertas();
+			if (!alertas.isEmpty()) {
+				List<AlertaDTO> dtos = alertas.stream()
+						.map(AlertaDTO::fromAlerta)
+						.collect(Collectors.toList());
+				return ResponseEntity.ok(dtos);
+			} else {
+				return ResponseEntity.badRequest().body("Alertas não encontrado");
+			}
+		} catch (IllegalArgumentException ex) {
+			return ResponseEntity.badRequest().body("Parâmetros inválidos: " + ex.getMessage());
+		} catch (Exception e) {
+			LOG.error("[GET] /get-alerta - Erro: ", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Erro interno ao buscar alerta.");
+		}
+	}
+
 	@GetMapping("/get-alerta")
 	public ResponseEntity<?> getAlerta(@RequestParam String id) {
 		try {

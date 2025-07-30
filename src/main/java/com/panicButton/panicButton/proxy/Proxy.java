@@ -18,7 +18,7 @@ public class Proxy implements IProxy {
         this.sistema = sistema;
     }
 
-        public Usuario createUsuario(UsuarioDTO usuarioDTO) {
+    public Usuario createUsuario(UsuarioDTO usuarioDTO) {
         return sistema.createUsuario(usuarioDTO);
     }
     public Administrador createAdministrador(Usuario usuario) {
@@ -40,6 +40,9 @@ public class Proxy implements IProxy {
 
     public Alerta createAlerta(AlertaDTO alertaDTO) {
         return sistema.createAlerta(alertaDTO);
+    }
+    public Iterable<Alerta>  getAlertas() {
+        return sistema.getAlertas();
     }
     public List<Alerta> getAlerta(Usuario usuario) {
         return sistema.getAlerta(usuario);

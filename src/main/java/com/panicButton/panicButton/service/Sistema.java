@@ -143,7 +143,11 @@ public class Sistema {
             Point ponto = geometryFactory.createPoint(new Coordinate(alertaDTO.getLatitude(), alertaDTO.getLongitude()));
             if(quadrilatero.contains(ponto)) {
                 String body = "Um alerta foi criado por motivo de: " + alertaDTO.getMotivo();
-                emailService.sendEmail("lucas.n.aiello@gmail.com", "Alerta!", body);
+
+                List<Usuario> usuarios = (List<Usuario>)usuarioRepository.findAll();
+                for(Usuario u : usuarios) {
+                    emailService.sendEmail(u.getEmail(), "Alerta!", body);
+                }
                 return alertaRepository.save(alerta);
             }
             else {
@@ -161,6 +165,10 @@ public class Sistema {
 
     public List<Alerta> getAlerta(Usuario usuario) {
         return alertaRepository.findByUsuario(usuario);
+    }
+
+    public Iterable<Alerta>  getAlertas() {
+        return alertaRepository.findAll();
     }
 
     public Iterable<Alerta> getAlertasAtivos() {

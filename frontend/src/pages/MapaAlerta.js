@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import 'ol/ol.css';
 import alertaService from '../services/Alerta'
+import usuarioService from '../services/Usuario';
 import { Map, View } from 'ol';
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
 import { OSM, Vector as VectorSource } from 'ol/source';
@@ -10,14 +11,36 @@ import { fromLonLat } from 'ol/proj';
 import Style from 'ol/style/Style';
 import Icon from 'ol/style/Icon';
 import styles from '../styles';
-import { data } from 'react-router-dom';
 
 export default function MapaAlertas() {
   const mapRef = useRef();
   const [vectorSource] = useState(new VectorSource());
-  var alerta = false;
+  const [usuarioBloqueado, setUsuarioBloqueado] = useState(false);
+  let alerta = false;
 
   useEffect(() => {
+    const verificarEstadoUsuario = async () => {
+      const matricula = localStorage.getItem('matricula');
+      if (!matricula) return;
+
+      try {
+        const usuario = await usuarioService.buscarUsuario(matricula);
+        if (usuario.estado === 'BLOQUEADO') {
+          setUsuarioBloqueado(true);
+        } else {
+          setUsuarioBloqueado(false);
+        }
+      } catch (err) {
+        console.error('Erro ao buscar usuário:', err);
+      }
+    };
+
+    verificarEstadoUsuario();
+  }, []);
+
+  useEffect(() => {
+    if (usuarioBloqueado) return;
+
     const map = new Map({
       target: mapRef.current,
       layers: [
@@ -32,9 +55,8 @@ export default function MapaAlertas() {
 
     const fetchAlertas = async () => {
       try {
-       const resultados = await alertaService.buscarAlertasPorAtivo();
-        console.log(resultados)
-        const ativos = resultados.filter(alerta => alerta.ativo === 1);
+        const resultados = await alertaService.buscarAlertasPorAtivo();
+        const ativos = resultados.filter(alerta => alerta.ativo === 1 && alerta.usuario?.estado !== 'BLOQUEADO');
 
         vectorSource.clear();
 
@@ -53,14 +75,12 @@ export default function MapaAlertas() {
 
             vectorSource.addFeature(feature);
           });
-          if(!alerta){
+
+          if (!alerta) {
             alert('⚠️ ALERTA(S) ATIVO(S) DETECTADO(S)!');
             alerta = true;
           }
-          
-
-        }
-        else{
+        } else {
           alerta = false;
         }
       } catch (error) {
@@ -72,11 +92,15 @@ export default function MapaAlertas() {
     const intervalId = setInterval(fetchAlertas, 10000);
 
     return () => clearInterval(intervalId);
-  }, [vectorSource]);
+  }, [usuarioBloqueado, vectorSource]);
 
- return (
-  <div style={styles.mapaContainer}>
-    <div ref={mapRef} style={{ width: '100%', height: '500px' }} />
-  </div>
-);
+  if (usuarioBloqueado) {
+    return <p style={{ textAlign: 'center', color: 'red' }}>Acesso bloqueado. Você não pode visualizar o mapa.</p>;
+  }
+
+  return (
+    <div style={styles.mapaContainer}>
+      <div ref={mapRef} style={{ width: '100%', height: '500px' }} />
+    </div>
+  );
 }

@@ -1,26 +1,38 @@
 import { useEffect, useState } from 'react';
-import alertaService from '../services/Alerta'
+import alertaService from '../services/Alerta';
+import usuarioService from '../services/Usuario';
 import styles from '../styles';
 
- const Alertas = () => {
+const Alertas = () => {
   const [alertas, setAlertas] = useState([]);
-  const [ids] = useState([1, 2, 3]); 
 
   useEffect(() => {
-    const buscarAlertasInativos = async () => {
+    const buscarAlertasInativosComUsuario = async () => {
       try {
-        const resultados = await Promise.all(
-          ids.map(ativo => alertaService.buscarAlerta(ativo))
+        const todosAlertas = await alertaService.buscarAlertas();
+        const inativos = todosAlertas.filter(alerta => alerta.ativo === 0);
+
+        // Enriquecer cada alerta com o nome do usuário
+        const alertasComNome = await Promise.all(
+          inativos.map(async alerta => {
+            try {
+              const usuario = await usuarioService.buscarUsuario(alerta.usuarioId);
+              return { ...alerta, nomeUsuario: usuario.nome };
+            } catch (e) {
+              console.warn(`Erro ao buscar usuário ${alerta.usuarioId}:`, e);
+              return { ...alerta, nomeUsuario: 'Desconhecido' };
+            }
+          })
         );
-        const inativos = resultados.filter(alerta => alerta.ativo === 0);
-        setAlertas(inativos);
-        } catch (err) {
+
+        setAlertas(alertasComNome);
+      } catch (err) {
         console.error('Erro ao buscar alertas:', err);
       }
     };
 
-    buscarAlertasInativos();
-  }, [ids]);
+    buscarAlertasInativosComUsuario();
+  }, []);
 
   return (
     <div style={styles.alertasContainer}>
@@ -32,7 +44,7 @@ import styles from '../styles';
           {alertas.map((alerta) => (
             <li key={alerta.id} style={styles.alertaCard}>
               <p><strong>Motivo:</strong> {alerta.motivo}</p>
-              <p><strong>Usuário:</strong> {alerta.usuario?.nome || 'Desconhecido'}</p>
+              <p><strong>Usuário:</strong> {alerta.nomeUsuario}</p>
             </li>
           ))}
         </ul>

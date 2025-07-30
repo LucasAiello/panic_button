@@ -23,6 +23,15 @@ class AlertaService {
       });
   }
 
+  buscarAlertas() {
+    return api.get('/get-alertas',)
+      .then(res => res.data)
+      .catch(error => {
+        console.error('Erro ao buscar alerta:', error.response?.data || error.message);
+        throw error;
+      });
+  }
+
   buscarAlertasPorAtivo() {
     return api.get('/get-alerta-ativos')
       .then(res => res.data)
