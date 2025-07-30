@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import alertaService from '../services/Alerta';
 import styles from '../styles';
 
@@ -6,10 +6,30 @@ export default function AlertaForm() {
   const [form, setForm] = useState({
     titulo: '',
     descricao: '',
-    longitude: '',
     latitude: '',
+    longitude: '',
     prioridade: ''
   });
+
+  // Captura localização ao carregar o componente
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        pos => {
+          setForm(prev => ({
+            ...prev,
+            latitude: pos.coords.latitude,
+            longitude: pos.coords.longitude
+          }));
+        },
+        err => {
+          console.log("Erro ao obter localização:", err.message);
+        }
+      );
+    } else {
+      console.log("Geolocalização não é suportada neste navegador.");
+    }
+  }, []);
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -21,7 +41,13 @@ export default function AlertaForm() {
     alertaService.criarAlerta(form)
       .then(() => {
         alert('Alerta criado com sucesso!');
-        setForm({ titulo: '', descricao: '', longitude: '', latitude: '', prioridade: '' });
+        setForm({
+          titulo: '',
+          descricao: '',
+          latitude: '',
+          longitude: '',
+          prioridade: ''
+        });
       })
       .catch(() => {
         alert('Erro ao criar alerta');
@@ -46,27 +72,17 @@ export default function AlertaForm() {
           onChange={handleChange}
           style={styles.input}
         />
-        <input
-          name="longitude"
-          placeholder="Longitude"
-          value={form.longitude}
-          onChange={handleChange}
-          style={styles.input}
-        />
-        <input
-          name="latitude"
-          placeholder="Latitude"
-          value={form.latitude}
-          onChange={handleChange}
-          style={styles.input}
-        />
-        <input
+        <select
           name="prioridade"
-          placeholder="Prioridade"
           value={form.prioridade}
           onChange={handleChange}
           style={styles.input}
-        />
+        >
+          <option value="">Selecione a prioridade</option>
+          <option value="Baixa">Baixa</option>
+          <option value="Média">Média</option>
+          <option value="Alta">Alta</option>
+        </select>
         <button type="submit" style={styles.submitButton}>Criar Alerta</button>
       </form>
     </div>
