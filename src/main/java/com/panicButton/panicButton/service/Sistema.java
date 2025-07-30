@@ -27,17 +27,8 @@ import java.util.UUID;
 
 @Service
 public class Sistema {
-    GeometryFactory geometryFactory = new GeometryFactory();
 
-    static final Coordinate[] coords = new Coordinate[] {
-            new Coordinate(-7.238372714431187, -35.91495364062937),
-            new Coordinate(-7.239280057653925, -35.91720937834884),
-            new Coordinate(-7.240870418729719, -35.913960759230775),
-            new Coordinate(-7.241666958311792, -35.916112467917074),
-            new Coordinate(-7.238372714431187, -35.91495364062937) // fechar poligono
-    };
-
-    private static Sistema instance;
+    //private static Sistema instance;
 
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -55,7 +46,12 @@ public class Sistema {
         instance = this;
     }
 
+    private static Sistema instance = null;
+
     public static Sistema getInstance(){
+        if(instance == null){
+            instance = new Sistema();
+        }
         return instance;
     }
 
@@ -141,30 +137,17 @@ public class Sistema {
         VerificaPenalidadeHandler penal = new VerificaPenalidadeHandler();
 
         local.setNext(penal);
-        local.handle(alerta); // inicia a cadeia
+        local.handle(alerta); 
 
-        if(usuario.getEstado() instanceof Ativo){
-            LinearRing shell = geometryFactory.createLinearRing(coords);
-            Polygon quadrilatero = geometryFactory.createPolygon(shell, null);
-            System.out.println(alertaDTO.getLatitude());
-            System.out.println(alertaDTO.getLongitude());
-            Point ponto = geometryFactory.createPoint(new Coordinate(alertaDTO.getLatitude(), alertaDTO.getLongitude()));
-            if(quadrilatero.contains(ponto)) {
-                String body = "Um alerta foi criado por motivo de: " + alertaDTO.getMotivo();
+        String body = "Um alerta foi criado por motivo de: " + alertaDTO.getMotivo();
 
-                List<Usuario> usuarios = (List<Usuario>)usuarioRepository.findAll();
-                for(Usuario u : usuarios) {
-                    emailService.sendEmail(u.getEmail(), "Alerta!", body);
-                }
-                return alertaRepository.save(alerta);
-            }
-            else {
-                throw new Error("Localização Invalida");
-            }
+        List<Usuario> usuarios = (List<Usuario>)usuarioRepository.findAll();
+        for(Usuario u : usuarios) {
+            emailService.sendEmail(u.getEmail(), "Alerta!", body);
         }
-        else {
-            throw new Error("Usuario não ativo");
-        }
+        return alertaRepository.save(alerta);
+
+
 
     }
     public Iterable<Usuario> getUsuarios() {
