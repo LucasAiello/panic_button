@@ -3,6 +3,9 @@ import { v4 as uuidv4 } from 'uuid'; // UUID para gerar ID único
 import alertaService from '../services/Alerta';
 import styles from '../styles';
 
+import useUsuarioId from '../hooks/useUsuarioId';
+ // Vai pedir só na primeira vez
+
 export default function AlertaForm() {
   const [form, setForm] = useState({
     titulo: '',
@@ -12,8 +15,8 @@ export default function AlertaForm() {
 
   const [latitude, setLatitude] = useState('');
   const [longitude, setLongitude] = useState('');
-  const [usuarioId, setUsuarioId] = useState('');
-
+  const usuarioId = useUsuarioId();
+  /*
   // ID único da máquina/usuário
   useEffect(() => {
     let id = localStorage.getItem('usuarioId');
@@ -22,7 +25,7 @@ export default function AlertaForm() {
       localStorage.setItem('usuarioId', id);
     }
     setUsuarioId(id);
-  }, []);
+  }, []);*/
 
   // localização
   useEffect(() => {
