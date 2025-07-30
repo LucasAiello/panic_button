@@ -3,33 +3,42 @@ import alertaService from '../services/Alerta';
 import styles from '../styles';
 
 export default function AlertaForm() {
-  // Estado só para os dados do formulário que o usuário preenche
   const [form, setForm] = useState({
     titulo: '',
     descricao: '',
     prioridade: ''
   });
 
-  // Estados separados para latitude e longitude
   const [latitude, setLatitude] = useState('');
   const [longitude, setLongitude] = useState('');
+  const [permissaoLocalizacao, setPermissaoLocalizacao] = useState(false);
+  const [perguntouLocalizacao, setPerguntouLocalizacao] = useState(false);
 
-  // Captura localização ao carregar o componente
   useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        pos => {
-          setLatitude(pos.coords.latitude);
-          setLongitude(pos.coords.longitude);
-        },
-        err => {
-          console.log("Erro ao obter localização:", err.message);
-        }
-      );
-    } else {
-      console.log("Geolocalização não é suportada neste navegador.");
+    if (!perguntouLocalizacao) {
+      const permitir = window.confirm('Podemos acessar sua localização para cadastrar o alerta?');
+      setPerguntouLocalizacao(true);
+      setPermissaoLocalizacao(permitir);
     }
-  }, []);
+  }, [perguntouLocalizacao]);
+
+  useEffect(() => {
+    if (permissaoLocalizacao) {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          pos => {
+            setLatitude(pos.coords.latitude);
+            setLongitude(pos.coords.longitude);
+          },
+          err => {
+            console.log("Erro ao obter localização:", err.message);
+          }
+        );
+      } else {
+        console.log("Geolocalização não é suportada neste navegador.");
+      }
+    }
+  }, [permissaoLocalizacao]);
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -38,7 +47,6 @@ export default function AlertaForm() {
   const handleSubmit = e => {
     e.preventDefault();
 
-    // Enviar form + latitude e longitude separados
     alertaService.criarAlerta({
       ...form,
       latitude,
@@ -89,6 +97,11 @@ export default function AlertaForm() {
           <option value="Média">Média</option>
           <option value="Alta">Alta</option>
         </select>
+
+        {!permissaoLocalizacao && perguntouLocalizacao && (
+          <p style={{ color: 'red' }}>Localização não autorizada. O alerta será criado sem ela.</p>
+        )}
+
         <button type="submit" style={styles.submitButton}>Criar Alerta</button>
       </form>
     </div>
