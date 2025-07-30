@@ -42,7 +42,7 @@ public class PanicButtonFacadeController {
 		}
 	}
 	@GetMapping("/get-usuario")
-	public ResponseEntity<?> get(@RequestParam String matricula) {
+	public ResponseEntity<?> getUsuario(@RequestParam String matricula) {
 		try {
 			Optional<Usuario> novoUsuario = proxy.getUsuario(matricula);
 			if (novoUsuario.isPresent()) {
@@ -111,9 +111,13 @@ public class PanicButtonFacadeController {
 	}
 
 	@GetMapping("/get-alerta")
-	public ResponseEntity<?> get(@RequestParam Long id) {
+	public ResponseEntity<?> getAlerta(@RequestParam String id) {
 		try {
-			List<Alerta> alertas = proxy.getAlerta(id);
+			Optional<Usuario> novoUsuario = proxy.getUsuario(id);
+			if(novoUsuario.isEmpty()){
+				throw new RuntimeException("Usuário não encontrado");
+			}
+			List<Alerta> alertas = proxy.getAlerta(novoUsuario.get());
 			if (!alertas.isEmpty()) {
 				List<AlertaDTO> dtos = alertas.stream()
 						.map(AlertaDTO::fromAlerta)

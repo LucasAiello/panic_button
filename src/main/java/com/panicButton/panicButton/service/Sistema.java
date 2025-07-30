@@ -113,7 +113,9 @@ public class Sistema {
         alerta.setLatitude(alertaDTO.getLatitude());
         alerta.setLongitude(alertaDTO.getLongitude());
         alerta.setMotivo(alertaDTO.getMotivo());
-        alerta.setUsuarioId(alertaDTO.getUsuarioId());
+        Usuario usuario = usuarioRepository.findById(alertaDTO.getUsuarioId())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        alerta.setUsuario(usuario);
         alerta.setObservadores(alertaDTO.getObservadores());
         alerta.setAtivo(alertaDTO.getAtivo());
 
@@ -131,8 +133,8 @@ public class Sistema {
         }
     }
 
-    public List<Alerta> getAlerta(Long id) {
-        return alertaRepository.findByUsuarioId(id);
+    public List<Alerta> getAlerta(Usuario usuario) {
+        return alertaRepository.findByUsuario(usuario);
     }
 
     public Iterable<Alerta> getAlertasAtivos() {
@@ -140,14 +142,17 @@ public class Sistema {
     }
 
     public Alerta updateAlerta(AlertaDTO alertaDTO) {
-        Alerta alerta = (Alerta) getAlerta(alertaDTO.getUsuarioId());
-        if (alerta == null) {
+        Optional<Alerta> op = alertaRepository.findById(alertaDTO.getId());
+        if (op.isEmpty()) {
             throw new RuntimeException("Alerta não encontrado");
         }
+        Alerta alerta = op.get();
         alerta.setLatitude(alertaDTO.getLatitude());
         alerta.setLongitude(alertaDTO.getLongitude());
         alerta.setMotivo(alertaDTO.getMotivo());
-        alerta.setUsuarioId(alertaDTO.getUsuarioId());
+        Usuario usuario = usuarioRepository.findById(alertaDTO.getUsuarioId())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        alerta.setUsuario(usuario);
         alerta.setObservadores(alertaDTO.getObservadores());
         alerta.setAtivo(alertaDTO.getAtivo());
 

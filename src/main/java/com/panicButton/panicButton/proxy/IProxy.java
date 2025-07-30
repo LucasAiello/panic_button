@@ -16,7 +16,7 @@ public interface IProxy {
     Usuario updateUsuario(UsuarioDTO usuarioDTO);
     Optional<Usuario> removeUsuario(String matricula);
 
-    List<Alerta> getAlerta(Long id);
+    List<Alerta> getAlerta(Usuario usuario);
     Iterable<Alerta> getAlertasAtivos();
     Optional<Alerta> removeAlerta(Long id);
     Alerta createAlerta(AlertaDTO alertaDTO);
