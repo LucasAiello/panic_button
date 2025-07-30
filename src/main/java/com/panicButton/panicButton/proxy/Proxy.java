@@ -38,7 +38,7 @@ public class Proxy implements IProxy {
         return sistema.removeUsuario(matricula);
     }
 
-    public Alerta createAlerta(AlertaDTO alertaDTO) {
+    public Alerta createAlerta(AlertaDTO alertaDTO) throws Exception {
         return sistema.createAlerta(alertaDTO);
     }
     public Iterable<Alerta>  getAlertas() {

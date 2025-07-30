@@ -1,5 +1,7 @@
 package com.panicButton.panicButton.service;
 
+import com.panicButton.panicButton.handler.VerificaLocalizacaoHandler;
+import com.panicButton.panicButton.handler.VerificaPenalidadeHandler;
 import com.panicButton.panicButton.state.Ativo;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -124,7 +126,7 @@ public class Sistema {
         return usuario;
     }
 
-    public Alerta createAlerta(AlertaDTO alertaDTO) {
+    public Alerta createAlerta(AlertaDTO alertaDTO) throws Exception {
         Alerta alerta = new Alerta();
         alerta.setLatitude(alertaDTO.getLatitude());
         alerta.setLongitude(alertaDTO.getLongitude());
@@ -134,6 +136,12 @@ public class Sistema {
         alerta.setUsuario(usuario);
         alerta.setObservadores(alertaDTO.getObservadores());
         alerta.setAtivo(alertaDTO.getAtivo());
+
+        VerificaLocalizacaoHandler local = new VerificaLocalizacaoHandler();
+        VerificaPenalidadeHandler penal = new VerificaPenalidadeHandler();
+
+        local.setNext(penal);
+        local.handle(alerta); // inicia a cadeia
 
         if(usuario.getEstado() instanceof Ativo){
             LinearRing shell = geometryFactory.createLinearRing(coords);

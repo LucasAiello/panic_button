@@ -19,6 +19,6 @@ public interface IProxy {
     List<Alerta> getAlerta(Usuario usuario);
     Iterable<Alerta> getAlertasAtivos();
     Optional<Alerta> removeAlerta(Long id);
-    Alerta createAlerta(AlertaDTO alertaDTO);
+    Alerta createAlerta(AlertaDTO alertaDTO) throws Exception;
     Alerta updateAlerta(AlertaDTO alertaDTO);
 }
