@@ -9,6 +9,8 @@ import Feature from 'ol/Feature';
 import { fromLonLat } from 'ol/proj';
 import Style from 'ol/style/Style';
 import Icon from 'ol/style/Icon';
+import styles from '../styles';
+import { data } from 'react-router-dom';
 
 export default function MapaAlertas() {
   const mapRef = useRef();
@@ -64,9 +66,9 @@ export default function MapaAlertas() {
     return () => clearInterval(intervalId);
   }, [vectorSource]);
 
-  return (
-    <div style={{ boxShadow: '0 2px 6px rgba(0,0,0,0.1)', borderRadius: '8px', overflow: 'hidden' }}>
-      <div ref={mapRef} style={{ width: '100%', height: '500px' }} />
-    </div>
-  );
+ return (
+  <div style={styles.mapaContainer}>
+    <div ref={mapRef} style={{ width: '100%', height: '500px' }} />
+  </div>
+);
 }
