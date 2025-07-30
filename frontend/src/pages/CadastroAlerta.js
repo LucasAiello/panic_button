@@ -3,24 +3,24 @@ import alertaService from '../services/Alerta';
 import styles from '../styles';
 
 export default function AlertaForm() {
+  // Estado só para os dados do formulário que o usuário preenche
   const [form, setForm] = useState({
     titulo: '',
     descricao: '',
-    latitude: '',
-    longitude: '',
     prioridade: ''
   });
+
+  // Estados separados para latitude e longitude
+  const [latitude, setLatitude] = useState('');
+  const [longitude, setLongitude] = useState('');
 
   // Captura localização ao carregar o componente
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         pos => {
-          setForm(prev => ({
-            ...prev,
-            latitude: pos.coords.latitude,
-            longitude: pos.coords.longitude
-          }));
+          setLatitude(pos.coords.latitude);
+          setLongitude(pos.coords.longitude);
         },
         err => {
           console.log("Erro ao obter localização:", err.message);
@@ -38,14 +38,17 @@ export default function AlertaForm() {
   const handleSubmit = e => {
     e.preventDefault();
 
-    alertaService.criarAlerta(form)
+    // Enviar form + latitude e longitude separados
+    alertaService.criarAlerta({
+      ...form,
+      latitude,
+      longitude
+    })
       .then(() => {
         alert('Alerta criado com sucesso!');
         setForm({
           titulo: '',
           descricao: '',
-          latitude: '',
-          longitude: '',
           prioridade: ''
         });
       })
@@ -64,6 +67,7 @@ export default function AlertaForm() {
           value={form.titulo}
           onChange={handleChange}
           style={styles.input}
+          required
         />
         <input
           name="descricao"
@@ -71,12 +75,14 @@ export default function AlertaForm() {
           value={form.descricao}
           onChange={handleChange}
           style={styles.input}
+          required
         />
         <select
           name="prioridade"
           value={form.prioridade}
           onChange={handleChange}
           style={styles.input}
+          required
         >
           <option value="">Selecione a prioridade</option>
           <option value="Baixa">Baixa</option>
