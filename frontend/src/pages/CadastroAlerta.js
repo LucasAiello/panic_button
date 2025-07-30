@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid'; // UUID para gerar ID único
 import alertaService from '../services/Alerta';
 import styles from '../styles';
 
@@ -11,34 +12,33 @@ export default function AlertaForm() {
 
   const [latitude, setLatitude] = useState('');
   const [longitude, setLongitude] = useState('');
-  const [permissaoLocalizacao, setPermissaoLocalizacao] = useState(false);
-  const [perguntouLocalizacao, setPerguntouLocalizacao] = useState(false);
+  const [usuarioId, setUsuarioId] = useState('');
 
+  // ID único da máquina/usuário
   useEffect(() => {
-    if (!perguntouLocalizacao) {
-      const permitir = window.confirm('Podemos acessar sua localização para cadastrar o alerta?');
-      setPerguntouLocalizacao(true);
-      setPermissaoLocalizacao(permitir);
+    let id = localStorage.getItem('usuarioId');
+    if (!id) {
+      id = uuidv4();
+      localStorage.setItem('usuarioId', id);
     }
-  }, [perguntouLocalizacao]);
+    setUsuarioId(id);
+  }, []);
 
+  // localização
   useEffect(() => {
-    if (permissaoLocalizacao) {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          pos => {
-            setLatitude(pos.coords.latitude);
-            setLongitude(pos.coords.longitude);
-          },
-          err => {
-            console.log("Erro ao obter localização:", err.message);
-          }
-        );
-      } else {
-        console.log("Geolocalização não é suportada neste navegador.");
-      }
+    const permitir = window.confirm('Podemos acessar sua localização para cadastrar o alerta?');
+    if (permitir && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        pos => {
+          setLatitude(pos.coords.latitude);
+          setLongitude(pos.coords.longitude);
+        },
+        err => {
+          console.log("Erro ao obter localização:", err.message);
+        }
+      );
     }
-  }, [permissaoLocalizacao]);
+  }, []);
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -47,11 +47,14 @@ export default function AlertaForm() {
   const handleSubmit = e => {
     e.preventDefault();
 
-    alertaService.criarAlerta({
+    const alerta = {
       ...form,
       latitude,
-      longitude
-    })
+      longitude,
+      usuarioId // ← Aqui vai o ID da máquina
+    };
+
+    alertaService.criarAlerta(alerta)
       .then(() => {
         alert('Alerta criado com sucesso!');
         setForm({
@@ -97,11 +100,6 @@ export default function AlertaForm() {
           <option value="Média">Média</option>
           <option value="Alta">Alta</option>
         </select>
-
-        {!permissaoLocalizacao && perguntouLocalizacao && (
-          <p style={{ color: 'red' }}>Localização não autorizada. O alerta será criado sem ela.</p>
-        )}
-
         <button type="submit" style={styles.submitButton}>Criar Alerta</button>
       </form>
     </div>
