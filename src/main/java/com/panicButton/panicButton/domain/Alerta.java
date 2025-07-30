@@ -22,8 +22,9 @@ public class Alerta
     private double latitude;
 
     private String motivo;
-    @Column(name = "usuario_id")
-    private Long usuarioId;
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
     @Transient
     private List<iObserver> observadores;
 

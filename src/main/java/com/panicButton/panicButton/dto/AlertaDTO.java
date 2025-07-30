@@ -13,7 +13,7 @@ public class AlertaDTO {
     private double longitude;
     private double latitude;
     private String motivo;
-    private Long usuarioId;
+    private String usuarioId;
     private List<iObserver> observadores;
     private Integer ativo;
 
@@ -23,7 +23,7 @@ public class AlertaDTO {
         dto.latitude = alerta.getLatitude();
         dto.longitude = alerta.getLongitude();
         dto.setMotivo(alerta.getMotivo());
-        dto.setUsuarioId(alerta.getUsuarioId());
+        dto.setUsuarioId(alerta.getUsuario().getMatricula());
         dto.setObservadores(alerta.getObservadores());
         dto.setAtivo(alerta.getAtivo());
         return dto;

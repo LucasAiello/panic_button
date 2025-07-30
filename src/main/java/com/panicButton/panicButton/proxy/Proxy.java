@@ -37,8 +37,8 @@ public class Proxy implements IProxy {
     public Alerta createAlerta(AlertaDTO alertaDTO) {
         return sistema.createAlerta(alertaDTO);
     }
-    public List<Alerta> getAlerta(Long id) {
-        return sistema.getAlerta(id);
+    public List<Alerta> getAlerta(Usuario usuario) {
+        return sistema.getAlerta(usuario);
     }
     public Iterable<Alerta> getAlertasAtivos() {
         return sistema.getAlertasAtivos();
