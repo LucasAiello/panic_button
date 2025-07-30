@@ -28,6 +28,7 @@ public class Alerta
     @Transient
     private List<iObserver> observadores;
 
+    private String prioridade;
     private Integer ativo;
 
     public void notificarObservadores() {

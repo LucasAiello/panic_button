@@ -16,6 +16,7 @@ public class AlertaDTO {
     private String usuarioId;
     private List<iObserver> observadores;
     private Integer ativo;
+    private String prioridade;
 
     public static AlertaDTO fromAlerta(Alerta alerta) {
         AlertaDTO dto = new AlertaDTO();
@@ -26,6 +27,7 @@ public class AlertaDTO {
         dto.setUsuarioId(alerta.getUsuario().getMatricula());
         dto.setObservadores(alerta.getObservadores());
         dto.setAtivo(alerta.getAtivo());
+        dto.setPrioridade(alerta.getPrioridade());
         return dto;
     }
 
