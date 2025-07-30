@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { v4 as uuidv4 } from 'uuid'; // UUID para gerar ID único
 import alertaService from '../services/Alerta';
 import styles from '../styles';
 
@@ -9,24 +8,14 @@ import useUsuarioId from '../hooks/useUsuarioId';
 export default function AlertaForm() {
   const [form, setForm] = useState({
     titulo: '',
-    descricao: '',
+    motivo: '',
     prioridade: ''
   });
 
   const [latitude, setLatitude] = useState('');
   const [longitude, setLongitude] = useState('');
   const usuarioId = useUsuarioId();
-  /*
-  // ID único da máquina/usuário
-  useEffect(() => {
-    let id = localStorage.getItem('usuarioId');
-    if (!id) {
-      id = uuidv4();
-      localStorage.setItem('usuarioId', id);
-    }
-    setUsuarioId(id);
-  }, []);*/
-
+ 
   // localização
   useEffect(() => {
     const permitir = window.confirm('Podemos acessar sua localização para cadastrar o alerta?');
@@ -38,8 +27,14 @@ export default function AlertaForm() {
         },
         err => {
           console.log("Erro ao obter localização:", err.message);
+        },
+        {
+          enableHighAccuracy: true, // Solicita a maior precisão possível
+          timeout: 10000,           // Tempo máximo (em ms) para tentar obter a localização
+          maximumAge: 0             // Impede o uso de uma posição em cache
         }
       );
+
     }
   }, []);
 
@@ -62,7 +57,7 @@ export default function AlertaForm() {
         alert('Alerta criado com sucesso!');
         setForm({
           titulo: '',
-          descricao: '',
+          motivo: '',
           prioridade: ''
         });
       })

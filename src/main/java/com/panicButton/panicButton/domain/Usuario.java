@@ -21,8 +21,10 @@ public class Usuario
     @Id
     private String matricula;
     private String nome;
+    private String email;
     private boolean acesso_loc;
     @Convert(converter = EstadoConverter.class)
+    @NonNull
     private iEstado estado;
     private double longitude;
     private double latitude;

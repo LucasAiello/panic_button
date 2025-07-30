@@ -135,6 +135,22 @@ public class PanicButtonFacadeController {
 		}
 	}
 
+	@GetMapping("/autentificar")
+	public ResponseEntity<?> autentificar(@RequestParam String matricula, @RequestParam String email) {
+		try {
+			if(proxy.autentificar(matricula, email)){
+				return ResponseEntity.ok().body("Autorizado");
+			} else {
+				return ResponseEntity.badRequest().body("Não autorizado");
+			}
+		} catch (IllegalArgumentException ex) {
+			return ResponseEntity.badRequest().body("Parâmetros inválidos: " + ex.getMessage());
+		} catch (Exception e) {
+			LOG.error("[GET] /autentificar - Erro: ", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Erro interno ao autentificar.");
+		}
+	}
 	@GetMapping("/get-alerta-ativos")
 	public ResponseEntity<?> getAtivos() {
 		try {

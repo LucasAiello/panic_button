@@ -1,5 +1,6 @@
 package com.panicButton.panicButton.service;
 
+import com.panicButton.panicButton.state.Ativo;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.LinearRing;
@@ -57,6 +58,16 @@ public class Sistema {
     }
 
     EstadoConverter estadoConverter = new EstadoConverter();
+
+    public boolean autentificar (String matricula, String email) {
+        Optional<Usuario> opt_user = usuarioRepository.findById(matricula);
+        if(opt_user.isPresent()) {
+            Usuario usuario = opt_user.get();
+            return usuario.getEmail().equals(email);
+        }
+
+        throw new Error("Usuario nao encontrado");
+    }
 
     public Usuario createUsuario(UsuarioDTO usuarioDTO) {
         Usuario usuario = new Usuario();
@@ -119,18 +130,25 @@ public class Sistema {
         alerta.setObservadores(alertaDTO.getObservadores());
         alerta.setAtivo(alertaDTO.getAtivo());
 
-        LinearRing shell = geometryFactory.createLinearRing(coords);
-        Polygon quadrilatero = geometryFactory.createPolygon(shell, null);
-
-        Point ponto = geometryFactory.createPoint(new Coordinate(alertaDTO.getLatitude(), alertaDTO.getLongitude()));
-        if(quadrilatero.contains(ponto)) {
-            String body = "Um alerta foi criado por motivo de: " + alertaDTO.getMotivo();
-            emailService.sendEmail("lucas.n.aiello@gmail.com", "Alerta!", body);
-            return alertaRepository.save(alerta);
+        if(usuario.getEstado() instanceof Ativo){
+            LinearRing shell = geometryFactory.createLinearRing(coords);
+            Polygon quadrilatero = geometryFactory.createPolygon(shell, null);
+            System.out.println(alertaDTO.getLatitude());
+            System.out.println(alertaDTO.getLongitude());
+            Point ponto = geometryFactory.createPoint(new Coordinate(alertaDTO.getLatitude(), alertaDTO.getLongitude()));
+            if(quadrilatero.contains(ponto)) {
+                String body = "Um alerta foi criado por motivo de: " + alertaDTO.getMotivo();
+                emailService.sendEmail("lucas.n.aiello@gmail.com", "Alerta!", body);
+                return alertaRepository.save(alerta);
+            }
+            else {
+                throw new Error("Localização Invalida");
+            }
         }
         else {
-            throw new Error("Localização Invalida");
+            throw new Error("Usuario não ativo");
         }
+
     }
 
     public List<Alerta> getAlerta(Usuario usuario) {

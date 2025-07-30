@@ -15,6 +15,7 @@ import { data } from 'react-router-dom';
 export default function MapaAlertas() {
   const mapRef = useRef();
   const [vectorSource] = useState(new VectorSource());
+  var alerta = false;
 
   useEffect(() => {
     const map = new Map({
@@ -32,13 +33,13 @@ export default function MapaAlertas() {
     const fetchAlertas = async () => {
       try {
        const resultados = await alertaService.buscarAlertasPorAtivo();
-
+        console.log(resultados)
         const ativos = resultados.filter(alerta => alerta.ativo === 1);
 
         vectorSource.clear();
 
         if (ativos.length > 0) {
-          data.forEach(alerta => {
+          ativos.forEach(alerta => {
             const coord = fromLonLat([alerta.longitude, alerta.latitude]);
             const feature = new Feature(new Point(coord));
 
@@ -52,8 +53,15 @@ export default function MapaAlertas() {
 
             vectorSource.addFeature(feature);
           });
+          if(!alerta){
+            alert('⚠️ ALERTA(S) ATIVO(S) DETECTADO(S)!');
+            alerta = true;
+          }
+          
 
-          alert('⚠️ ALERTA(S) ATIVO(S) DETECTADO(S)!');
+        }
+        else{
+          alerta = false;
         }
       } catch (error) {
         console.error('Erro ao buscar alertas:', error);
